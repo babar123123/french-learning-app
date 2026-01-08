@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, User, Bot, Sparkles, AlertCircle, Mic, MicOff, Volume2 } from 'lucide-react';
+import { Send, User, Bot, Sparkles, AlertCircle, Mic, MicOff, Volume2, Settings, VolumeX } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useLanguage } from '../context/LanguageContext';
 import './Chat.css';
@@ -30,9 +30,10 @@ const Chat = () => {
         window.scrollTo(0, 0); // Open page from start
     }, []);
 
-    const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || 'AIzaSyAQmraYDNqo0R4-zTQKxRei0s4g4tp03_g');
-    const [showKeyInput, setShowKeyInput] = useState(false);
+    const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+    const [showKeyInput, setShowKeyInput] = useState(!localStorage.getItem('gemini_api_key'));
     const [isListening, setIsListening] = useState(false);
+    const [isSpeaking, setIsSpeaking] = useState(false);
     const messagesEndRef = useRef(null);
     const recognitionRef = useRef(null);
 
@@ -92,7 +93,19 @@ const Chat = () => {
         utterance.lang = langCodes[targetLanguage] || 'en-US';
         utterance.rate = 0.95;
         utterance.pitch = 1.0;
+
+        utterance.onstart = () => setIsSpeaking(true);
+        utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = () => setIsSpeaking(false);
+
         window.speechSynthesis.speak(utterance);
+    };
+
+    const stopSpeak = () => {
+        if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+            setIsSpeaking(false);
+        }
     };
 
     const scrollToBottom = () => {
@@ -129,7 +142,7 @@ const Chat = () => {
 
         try {
             const genAI = new GoogleGenerativeAI(apiKey);
-            const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
             const chat = model.startChat({
                 history: history.map(msg => ({
@@ -215,6 +228,21 @@ const Chat = () => {
                             <span className="status-dot">Online</span>
                         </div>
                     </div>
+
+                    <div className="header-actions">
+                        {isSpeaking && (
+                            <button className="stop-global-btn" onClick={stopSpeak} title="Stop AI Voice">
+                                <VolumeX size={18} /> Stop
+                            </button>
+                        )}
+                        <button
+                            className="btn-icon-only"
+                            onClick={() => setShowKeyInput(!showKeyInput)}
+                            title="API Settings"
+                        >
+                            <Settings size={20} />
+                        </button>
+                    </div>
                 </div>
 
                 {showKeyInput && (
@@ -244,9 +272,16 @@ const Chat = () => {
                             <div className="message-content">
                                 <p>{msg.text}</p>
                                 {msg.sender === 'ai' && (
-                                    <button className="speak-msg-btn" onClick={() => speak(msg.text)}>
-                                        <Volume2 size={14} />
-                                    </button>
+                                    <div className="speech-controls">
+                                        <button className="speak-msg-btn" onClick={() => speak(msg.text)}>
+                                            <Volume2 size={14} /> Listen
+                                        </button>
+                                        {isSpeaking && (
+                                            <button className="speak-msg-btn mute-btn" onClick={stopSpeak}>
+                                                <VolumeX size={14} /> Stop
+                                            </button>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         </div>
