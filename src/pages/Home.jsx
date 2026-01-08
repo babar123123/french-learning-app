@@ -53,8 +53,11 @@ const Home = () => {
                             <Link to="/chat" className="btn btn-primary btn-glow" onClick={playSuccess}>
                                 Start Learning <ArrowRight size={18} />
                             </Link>
+                            <Link to="/level-path" className="btn btn-secondary glass" onClick={playTap}>
+                                Learning Path ✨
+                            </Link>
                             <Link to="/lessons" className="btn btn-secondary glass" onClick={playTap}>
-                                Explore Curriculum
+                                Curriculum
                             </Link>
                         </div>
                     </div>

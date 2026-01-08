@@ -14,7 +14,7 @@ const Game = () => {
     const [score, setScore] = useState(0);
 
     useEffect(() => {
-        if (gameState === 'result' && score >= 70) {
+        if (gameState === 'result' && score >= 300) { // 15/20 correct = 300 XP
             playFanfare();
             const duration = 3 * 1000;
             const animationEnd = Date.now() + duration;
@@ -69,8 +69,8 @@ const Game = () => {
             });
         });
 
-        // Shuffle and pick 10 words
-        const shuffled = [...allWords].sort(() => 0.5 - Math.random()).slice(0, 10);
+        // Shuffle and pick 20 words
+        const shuffled = [...allWords].sort(() => 0.5 - Math.random()).slice(0, 20);
         setQuestions(shuffled);
         generateOptions(shuffled[0], allWords);
         setScore(0);
@@ -92,7 +92,7 @@ const Game = () => {
         if (feedback) return;
 
         if (selected === questions[currentQuestion].a) {
-            setScore(prev => prev + 10);
+            setScore(prev => prev + 20); // 100/20 = 5 XP per correct, but let's use 20 XP for 400 total
             setFeedback('correct');
             playSuccess();
         } else {
@@ -104,7 +104,7 @@ const Game = () => {
             if (currentQuestion < questions.length - 1) {
                 const nextIdx = currentQuestion + 1;
                 setCurrentQuestion(nextIdx);
-                generateOptions(questions[nextIdx], questions); // Use current session pool
+                generateOptions(questions[nextIdx], questions);
                 setFeedback(null);
             } else {
                 setGameState('result');
@@ -121,15 +121,15 @@ const Game = () => {
                             <Brain size={48} />
                         </div>
                         <h1>{labels.title}</h1>
-                        <p>Test your {targetLanguage} knowledge and earn XP!</p>
+                        <p>Master 20 questions to prove your skills!</p>
                         <div className="game-stats">
                             <div className="g-stat">
                                 <Star className="text-accent" />
-                                <span>10 Levels</span>
+                                <span>20 Questions</span>
                             </div>
                             <div className="g-stat">
                                 <Zap className="text-primary" />
-                                <span>Fast Paced</span>
+                                <span>Pass with 15+</span>
                             </div>
                         </div>
                         <button className="btn btn-primary btn-lg" onClick={() => { playSuccess(); prepareGame(); }}>
@@ -142,8 +142,8 @@ const Game = () => {
                     <div className="game-play animate-scale-in">
                         <div className="game-header">
                             <div className="q-progress">
-                                Question {currentQuestion + 1}/10
-                                <div className="p-bar"><div className="p-fill" style={{ width: `${(currentQuestion + 1) * 10}%` }}></div></div>
+                                Question {currentQuestion + 1}/20
+                                <div className="p-bar"><div className="p-fill" style={{ width: `${(currentQuestion + 1) * 5}%` }}></div></div>
                             </div>
                             <div className="game-score">
                                 <Trophy size={18} className="text-accent" />
@@ -180,15 +180,19 @@ const Game = () => {
                 {gameState === 'result' && (
                     <div className="game-result animate-fade-in">
                         <Trophy size={80} className="text-accent trophy-anim" />
-                        <h2>{score >= 70 ? '🎉 Congratulations! You Passed' : 'Level Complete!'}</h2>
-                        {score >= 70 && <p className="success-msg">Zabardast! Aap ne naya record banaya hai!</p>}
+                        <h2>{score >= 300 ? '🎉 Congratulations! You Passed' : 'Level Complete!'}</h2>
+                        {score >= 300 ? (
+                            <p className="success-msg">Mubarak ho! Aap ne 15 se zyada sahi jawab diye hain!</p>
+                        ) : (
+                            <p className="fail-msg">Aapko pass hone ke liye kam az kam 15 sahi jawab chahiye thay.</p>
+                        )}
                         <div className="final-score">
                             <div className="score-circle">
                                 <span className="score-num">{score}</span>
                                 <span className="score-xp">XP</span>
                             </div>
                         </div>
-                        <p>You mastered {score / 10} out of 10 words.</p>
+                        <p>You got {score / 20} out of 20 correct.</p>
                         <button className="btn btn-primary" onClick={() => { playTap(); prepareGame(); }}>
                             <RefreshCw size={20} /> {labels.restart}
                         </button>

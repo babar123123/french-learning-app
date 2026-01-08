@@ -1,17 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { lessonsData } from '../data/lessons';
-import { Play, Star, Clock, X, Volume2, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Play, Star, Clock, X, Volume2, ChevronRight, ChevronLeft, Trophy } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
 import { useLanguage } from '../context/LanguageContext';
 import './Lessons.css';
 
 const Lessons = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [activeLesson, setActiveLesson] = useState(null);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
     const [activeTab, setActiveTab] = useState('Beginner'); // Category toggle
-    const { playBlip, playCardSound } = useSound();
+    const { playBlip, playCardSound, playSuccess } = useSound();
     const { targetLanguage } = useLanguage();
+
+    useEffect(() => {
+        if (location.state && location.state.openLessonId) {
+            const lesson = lessonsData.find(l => l.id === location.state.openLessonId);
+            if (lesson) {
+                setActiveLesson(lesson);
+                setActiveTab(lesson.level);
+            }
+        }
+    }, [location.state]);
+
+    const handleFinish = (levelNumber) => {
+        playSuccess();
+        if (levelNumber) {
+            const currentUnlocked = parseInt(localStorage.getItem('unlockedLevel') || '1');
+            if (levelNumber >= currentUnlocked) {
+                localStorage.setItem('unlockedLevel', (levelNumber + 1).toString());
+            }
+        }
+        setActiveLesson(null);
+
+        // Return to where we came from
+        if (location.state?.from === 'level-path') {
+            navigate('/level-path');
+        } else {
+            // If opened from Curriculum, just stay there
+            setActiveLesson(null);
+        }
+    };
 
     const openLesson = (lesson) => {
         playCardSound();
@@ -23,6 +55,9 @@ const Lessons = () => {
     const closeLesson = () => {
         playBlip();
         setActiveLesson(null);
+        if (location.state?.from === 'level-path') {
+            navigate('/level-path');
+        }
     };
 
     const nextSlide = (e) => {
@@ -98,10 +133,10 @@ const Lessons = () => {
                         Intermediate
                     </button>
                     <button
-                        className={`tab-btn ${activeTab === 'Conversation' ? 'active' : ''}`}
-                        onClick={() => { setActiveTab('Conversation'); playBlip(); }}
+                        className={`tab-btn ${activeTab === 'Expert' ? 'active' : ''}`}
+                        onClick={() => { setActiveTab('Expert'); playBlip(); }}
                     >
-                        Conversation
+                        Expert
                     </button>
                 </div>
             </div>
@@ -150,48 +185,81 @@ const Lessons = () => {
                             </div>
                         </div>
 
-                        <div className="flashcard-container">
-                            <button
-                                className="nav-btn prev"
-                                onClick={prevSlide}
-                                disabled={currentSlide === 0}
-                            >
-                                <ChevronLeft size={32} />
-                            </button>
-
-                            <div
-                                className={`flashcard ${isFlipped ? 'flipped' : ''}`}
-                                onClick={() => { setIsFlipped(!isFlipped); playCardSound(); }}
-                            >
-                                <div className="card-face front">
-                                    <span className="sc-label">{targetLanguage}</span>
-                                    <div className="sc-content">
-                                        {activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french}
+                        {activeLesson.type === 'dialogue' ? (
+                            <div className="dialogue-container animate-fade-in">
+                                {activeLesson.content.map((item, idx) => (
+                                    <div key={idx} className={`dialogue-bubble ${idx % 2 === 0 ? 'left' : 'right'} animate-slide-up`} style={{ animationDelay: `${idx * 150}ms` }}>
+                                        <div className="bubble-content" onClick={(e) => playAudio(e, item[targetLanguage.toLowerCase()] || item.french)}>
+                                            <p className="txt-fr">{item[targetLanguage.toLowerCase()] || item.french}</p>
+                                            <p className="txt-en">{item.english}</p>
+                                            <div className="bubble-actions">
+                                                <Volume2 size={14} />
+                                                <span className="txt-pron">{item[targetLanguage.toLowerCase().substring(0, 3) + 'Pronunciation'] || item.pronunciation}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div
-                                        className="sc-pronunciation"
-                                        onClick={(e) => playAudio(e, activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french)}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        <Volume2 size={16} />
-                                        {activeLesson.content[currentSlide][targetLanguage.toLowerCase().substring(0, 3) + 'Pronunciation'] || activeLesson.content[currentSlide].pronunciation}
-                                    </div>
+                                ))}
+                                <div className="dialogue-footer">
+                                    <Trophy size={40} className="text-accent" />
+                                    <h3>Excellent Progress!</h3>
+                                    <p>Conversation Complete! +50 XP</p>
+                                    <button className="btn btn-primary" onClick={() => handleFinish(location.state?.levelNumber)}>
+                                        Finish Lesson
+                                    </button>
                                 </div>
-                                <div className="card-face back">
-                                    <span className="sc-label">English</span>
-                                    <div className="sc-content">{activeLesson.content[currentSlide].english}</div>
-                                </div>
-                                <p className="sc-hint">Click to flip</p>
                             </div>
+                        ) : (
+                            <div className="flashcard-container">
+                                <button
+                                    className="nav-btn prev"
+                                    onClick={prevSlide}
+                                    disabled={currentSlide === 0}
+                                >
+                                    <ChevronLeft size={32} />
+                                </button>
 
-                            <button
-                                className="nav-btn next"
-                                onClick={nextSlide}
-                                disabled={currentSlide === activeLesson.content.length - 1}
-                            >
-                                <ChevronRight size={32} />
-                            </button>
-                        </div>
+                                <div
+                                    className={`flashcard ${isFlipped ? 'flipped' : ''}`}
+                                    onClick={() => { setIsFlipped(!isFlipped); playCardSound(); }}
+                                >
+                                    <div className="card-face front">
+                                        <span className="sc-label">{targetLanguage}</span>
+                                        <div className="sc-content">
+                                            {activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french}
+                                        </div>
+                                        <div
+                                            className="sc-pronunciation"
+                                            onClick={(e) => playAudio(e, activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            <Volume2 size={16} />
+                                            {activeLesson.content[currentSlide][targetLanguage.toLowerCase().substring(0, 3) + 'Pronunciation'] || activeLesson.content[currentSlide].pronunciation}
+                                        </div>
+                                    </div>
+                                    <div className="card-face back">
+                                        <span className="sc-label">English</span>
+                                        <div className="sc-content">{activeLesson.content[currentSlide].english}</div>
+                                    </div>
+                                    <p className="sc-hint">Click to flip</p>
+                                </div>
+
+                                <button
+                                    className="nav-btn next"
+                                    onClick={nextSlide}
+                                    disabled={currentSlide === activeLesson.content.length - 1}
+                                >
+                                    <ChevronRight size={32} />
+                                </button>
+
+                                {currentSlide === activeLesson.content.length - 1 && (
+                                    <div className="finish-overlay animate-fade-in">
+                                        <button className="btn btn-primary btn-glow" onClick={() => handleFinish(location.state?.levelNumber)}>
+                                            Finish & Unlock Next Level
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
