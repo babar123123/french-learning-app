@@ -15,8 +15,9 @@ const Chat = () => {
             : targetLanguage === 'Spanish'
                 ? "¡Hola! I'm Lumière, your Spanish tutor. I'm here to practice Spanish with you. Ready?"
                 : "Hallo! I'm Lumière, your German tutor. I'm here to practice German with you. Ready?",
-        translation: "Bonjour! Main Lumière hoon, aapki tutor. Main yahan aapke saath practice karne ke liye hoon. Tayyar hain?",
-        showTranslation: false
+        translation_en: "Hello! I'm Lumière, your tutor. I'm here to practice with you. Ready?",
+        translation_ur: "Asalam-o-alaikum! Main Lumière hoon, aapki tutor. Main yahan aapke saath practice karne ke liye hoon. Tayyar hain?",
+        showTranslation: null // can be 'en', 'ur' or null
     };
 
     const [messages, setMessages] = useState([INITIAL_MESSAGE]);
@@ -212,18 +213,20 @@ const Chat = () => {
                     parts: [{
                         text: `You are Lumière, a friendly ${targetLanguage} tutor.
                         
-IMPORTANT: You MUST always respond in a raw JSON format like this:
+IMPORTANT: You MUST always respond ONLY in a raw JSON format like this:
 {
   "text": "[Continuous ${targetLanguage} response here]",
-  "translation": "[English/Roman Urdu translation here]"
+  "translation_en": "[Clear translation in English here]",
+  "translation_ur": "[Clear translation in Roman Urdu here]"
 }
 
 RULES:
 1. The 'text' field MUST be 100% in ${targetLanguage}. No English/Urdu.
-2. The 'translation' field should be a clear translation in a mix of English and Roman Urdu.
-3. Keep the conversation natural and encouraging.
-4. Correct user mistakes in the translation part if needed.
-5. Do NOT include any markdown outside the JSON.` }]
+2. The 'translation_en' must be plain English.
+3. The 'translation_ur' must be Roman Urdu (Urdu written in Latin script).
+4. Keep the conversation natural and encouraging.
+5. Correct user mistakes in the translation fields if needed.
+6. Do NOT include any markdown outside the JSON.` }]
                 }
             });
 
@@ -242,10 +245,18 @@ RULES:
                 }
 
                 // Fallback for non-JSON or partial response
-                return { text: text, translation: "Translation unavailable for this specific response." };
+                return {
+                    text: text,
+                    translation_en: "Translation unavailable.",
+                    translation_ur: "Tarjuma dastyab nahi."
+                };
             } catch (e) {
                 console.error("JSON Extraction Error:", e);
-                return { text: text, translation: "Format error. Try again." };
+                return {
+                    text: text,
+                    translation_en: "Error. Try again.",
+                    translation_ur: "Masla ho gaya. Dubara koshish karein."
+                };
             }
         } catch (error) {
             console.error("API Error detailed:", error);
@@ -290,8 +301,9 @@ RULES:
                 id: Date.now() + 1,
                 sender: 'ai',
                 text: typeof responseData === 'object' ? responseData.text : responseData,
-                translation: typeof responseData === 'object' ? responseData.translation : null,
-                showTranslation: false
+                translation_en: responseData.translation_en || null,
+                translation_ur: responseData.translation_ur || null,
+                showTranslation: null
             };
 
             setMessages(prev => [...prev, aiMsg]);
@@ -309,9 +321,9 @@ RULES:
         }
     };
 
-    const toggleTranslation = (id) => {
+    const setTranslationLang = (id, lang) => {
         setMessages(prev => prev.map(msg =>
-            msg.id === id ? { ...msg, showTranslation: !msg.showTranslation } : msg
+            msg.id === id ? { ...msg, showTranslation: msg.showTranslation === lang ? null : lang } : msg
         ));
     };
 
@@ -418,25 +430,31 @@ RULES:
                             </div>
                             <div className="message-content">
                                 <p>{msg.text}</p>
-                                {msg.showTranslation && msg.translation && (
-                                    <p className="message-translation animate-fade-in">
-                                        <em>{msg.translation}</em>
-                                    </p>
+                                {msg.showTranslation && (
+                                    <div className="message-translation animate-fade-in">
+                                        <em>{msg.showTranslation === 'en' ? msg.translation_en : msg.translation_ur}</em>
+                                    </div>
                                 )}
                                 {msg.sender === 'ai' && (
                                     <div className="speech-controls">
                                         <button className="speak-msg-btn" onClick={() => speak(msg.text)}>
                                             <Volume2 size={14} /> Listen
                                         </button>
-                                        <button
-                                            className="speak-msg-btn translate-btn"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleTranslation(msg.id);
-                                            }}
-                                        >
-                                            <Languages size={14} /> {msg.showTranslation ? 'Hide' : 'Translate'}
-                                        </button>
+
+                                        <div className="translation-options">
+                                            <button
+                                                className={`speak-msg-btn trans-opt ${msg.showTranslation === 'en' ? 'active' : ''}`}
+                                                onClick={() => setTranslationLang(msg.id, 'en')}
+                                            >
+                                                English
+                                            </button>
+                                            <button
+                                                className={`speak-msg-btn trans-opt ${msg.showTranslation === 'ur' ? 'active' : ''}`}
+                                                onClick={() => setTranslationLang(msg.id, 'ur')}
+                                            >
+                                                Urdu
+                                            </button>
+                                        </div>
                                         {isSpeaking && (
                                             <button className="speak-msg-btn mute-btn" onClick={stopSpeak}>
                                                 <VolumeX size={14} /> Stop

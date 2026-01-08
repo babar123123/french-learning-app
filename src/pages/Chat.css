@@ -293,32 +293,42 @@
 }
 
 .message-translation {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border-left: 2px solid var(--primary);
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    line-height: 1.4;
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
-.translate-btn {
-    color: var(--primary) !important;
-    background: rgba(236, 72, 153, 0.1) !important;
-    padding: 6px 12px !important;
-    border-radius: 20px !important;
-    border: 1px solid rgba(236, 72, 153, 0.2) !important;
-    font-weight: 500;
+.translation-options {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.trans-opt {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 4px 12px !important;
+    border-radius: 12px !important;
+    font-size: 0.8rem !important;
+    color: var(--text-secondary) !important;
     transition: all 0.2s ease !important;
 }
 
-.translate-btn:hover {
-    background: rgba(236, 72, 153, 0.2) !important;
-    color: var(--primary-glow) !important;
-    transform: translateY(-1px);
+.trans-opt:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
 }
 
-.translate-btn:active {
-    transform: scale(0.95);
+.trans-opt.active {
+    background: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 10px var(--primary-glow);
 }
 
 .animate-fade-in {
