@@ -15,14 +15,14 @@ const Welcome = () => {
         // Short delay for animation entry
         const timer = setTimeout(() => setShowContent(true), 150);
 
-        // Increased auto-redirect to 8 seconds for better visibility
-        const redirectTimer = setTimeout(() => {
-            navigate('/');
-        }, 8000);
+        // Auto-redirect disabled temporarily to fix disappearing issue
+        // const redirectTimer = setTimeout(() => {
+        //     navigate('/');
+        // }, 8000);
 
         return () => {
             clearTimeout(timer);
-            clearTimeout(redirectTimer);
+            // clearTimeout(redirectTimer);
         };
     }, [navigate]);
 
