@@ -17,6 +17,7 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import { Navigate } from 'react-router-dom';
 import ScrollToTop from './utils/ScrollToTop';
+import SessionTimeout from './components/utils/SessionTimeout';
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
@@ -31,6 +32,7 @@ function App() {
       <SoundProvider>
         <Router>
           <ScrollToTop />
+          <SessionTimeout timeoutInMinutes={5} />
           <div className="app-wrapper">
             <Onboarding />
             {isAuthenticated && <Header />}

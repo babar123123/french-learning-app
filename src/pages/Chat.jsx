@@ -38,6 +38,18 @@ const Chat = () => {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const messagesEndRef = useRef(null);
     const recognitionRef = useRef(null);
+    const voicesRef = useRef([]);
+
+    // Load voices for better mobile support
+    useEffect(() => {
+        const loadVoices = () => {
+            voicesRef.current = window.speechSynthesis.getVoices();
+        };
+        loadVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+    }, []);
 
     // Initialize Speech Recognition
     useEffect(() => {
@@ -85,20 +97,42 @@ const Chat = () => {
     const speak = (text) => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Clean text (remove markdown/formatting for better speech)
+        const cleanText = text.replace(/[*#_\[\]]/g, '');
+        const utterance = new SpeechSynthesisUtterance(cleanText);
 
         const langCodes = {
             'French': 'fr-FR',
             'Spanish': 'es-ES',
             'German': 'de-DE'
         };
-        utterance.lang = langCodes[targetLanguage] || 'en-US';
-        utterance.rate = 0.95;
+
+        const lang = langCodes[targetLanguage] || 'en-US';
+        utterance.lang = lang;
+
+        // Try to find a high-quality natural voice for the target language
+        const availableVoices = voicesRef.current.length > 0 ? voicesRef.current : window.speechSynthesis.getVoices();
+        const preferredVoice = availableVoices.find(v =>
+            v.lang.startsWith(lang.split('-')[0]) &&
+            (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium'))
+        ) || availableVoices.find(v => v.lang.startsWith(lang.split('-')[0]));
+
+        if (preferredVoice) {
+            utterance.voice = preferredVoice;
+        }
+
+        // Adjust rate and pitch for better mobile clarity
+        // Mobile browsers often sound "robotic" if rate is default or too fast
+        utterance.rate = 0.9;
         utterance.pitch = 1.0;
 
         utterance.onstart = () => setIsSpeaking(true);
         utterance.onend = () => setIsSpeaking(false);
-        utterance.onerror = () => setIsSpeaking(false);
+        utterance.onerror = (e) => {
+            console.error("Speech error:", e);
+            setIsSpeaking(false);
+        };
 
         window.speechSynthesis.speak(utterance);
     };
