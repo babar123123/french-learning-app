@@ -5,12 +5,22 @@ import { useSound } from '../context/SoundContext';
 import { useLanguage } from '../context/LanguageContext';
 import './Home.css';
 
+import './CinematicHero.css';
+
 const Home = () => {
     const { playTap, playSuccess, playBlip } = useSound();
     const { targetLanguage } = useLanguage();
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
+    // Dynamic words for the cinematic background
+    const floatingWords = {
+        French: ['Lumière', 'Savoir', 'Rêve', 'Paris', 'Amour'],
+        Spanish: ['Lenguaje', 'Explorar', 'Sueño', 'Madrid', 'Vida'],
+        German: ['Wissen', 'Traum', 'Berlin', 'Licht', 'Zukunft']
+    }[targetLanguage] || ['Explore', 'Learn', 'Master'];
+
     const content = {
+        // ... (existing content logic)
         French: {
             title: "Master French",
             phrase: "Comment ça va ?",
@@ -45,8 +55,63 @@ const Home = () => {
 
     return (
         <div className="home-page">
+            {/* Cinematic Video Hero */}
+            <section className="cinematic-hero">
+                <div className="video-container">
+                    <video
+                        className="video-bg"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        poster="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=80&w=1920"
+                    >
+                        <source src="https://player.vimeo.com/external/370331493.sd.mp4?s=7b0d4a9bac35c225a3962d8540c4900a6f44357c&profile_id=164&oauth2_token_id=57447761" type="video/mp4" />
+                    </video>
+                    <div className="hero-overlay"></div>
+                </div>
+
+                <div className="floating-words">
+                    {floatingWords.map((word, i) => (
+                        <span
+                            key={i}
+                            className="word"
+                            style={{
+                                top: `${20 + (i * 15)}%`,
+                                left: `${10 + (i * 20)}%`,
+                                animationDelay: `${i * 2}s`
+                            }}
+                        >
+                            {word}
+                        </span>
+                    ))}
+                </div>
+
+                <div className="container cinematic-content animate-fade-in">
+                    <h2 className="cinematic-subtitle">The Future of Language Learning</h2>
+                    <h1 className="cinematic-title text-gradient">Lumière AI</h1>
+                    <div className="hero-actions" style={{ justifyContent: 'center' }}>
+                        <button
+                            className="btn btn-primary btn-glow"
+                            onClick={() => {
+                                playSuccess();
+                                document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            style={{ padding: '16px 40px', fontSize: '1.2rem' }}
+                        >
+                            Start Your Journey <ArrowRight size={20} />
+                        </button>
+                    </div>
+                </div>
+
+                <div className="scroll-indicator">
+                    <span>Scroll to Explore</span>
+                    <div className="mouse"></div>
+                </div>
+            </section>
+
             {/* Hero Section */}
-            <section className="hero">
+            <section className="hero" id="main-content">
                 <div className="container hero-container">
                     <div className="hero-content animate-fade-in">
                         <div className="badge catch-phrase">✨ AI-Powered {targetLanguage} Tutor</div>

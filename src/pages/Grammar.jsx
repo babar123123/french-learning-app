@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Book, CheckCircle, ArrowLeft, GraduationCap, MessageCircle, Star, Info, Activity, Layers, MousePointer, Compass, Layout, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 import './Grammar.css';
 
 const Grammar = () => {
     const navigate = useNavigate();
+    const { targetLanguage } = useLanguage();
     const [activeCategory, setActiveCategory] = useState('all');
 
     const grammarData = [
@@ -153,6 +155,34 @@ const Grammar = () => {
         }
     ];
 
+    const [playingId, setPlayingId] = useState(null);
+
+    const speak = (text, id) => {
+        if (!window.speechSynthesis) return;
+
+        // Cancel any ongoing speech
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Map target language to speech codes
+        const langCodes = {
+            'French': 'fr-FR',
+            'Spanish': 'es-ES',
+            'German': 'de-DE'
+        };
+
+        utterance.lang = langCodes[targetLanguage] || 'fr-FR';
+        utterance.rate = 0.9;
+
+        setPlayingId(id);
+
+        utterance.onend = () => setPlayingId(null);
+        utterance.onerror = () => setPlayingId(null);
+
+        window.speechSynthesis.speak(utterance);
+    };
+
     const filteredData = activeCategory === 'all'
         ? grammarData
         : grammarData.filter(d => d.id === activeCategory);
@@ -203,15 +233,22 @@ const Grammar = () => {
 
                         <div className="cards-container">
                             {cat.sections.map((section, sidx) => (
-                                <div key={sidx} className="g-card glass-panel">
+                                <div key={sidx} className={`g-card glass-panel ${section.items.length > 5 ? 'wide' : ''}`}>
                                     <h3>{section.title}</h3>
                                     <div className="g-list">
-                                        {section.items.map((item, iidx) => (
-                                            <div key={iidx} className="g-item">
-                                                <span className="g-text-fr">{item.fr}</span>
-                                                <span className="g-text-en">{item.conj}</span>
-                                            </div>
-                                        ))}
+                                        {section.items.map((item, iidx) => {
+                                            const itemId = `${cat.id}-${sidx}-${iidx}`;
+                                            return (
+                                                <div
+                                                    key={iidx}
+                                                    className={`g-item ${playingId === itemId ? 'playing' : ''}`}
+                                                    onClick={() => speak(item.fr, itemId)}
+                                                >
+                                                    <span className="g-text-fr">{item.fr}</span>
+                                                    <span className="g-text-en">{item.conj}</span>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             ))}

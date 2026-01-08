@@ -266,7 +266,7 @@ const Lessons = () => {
                             onClick={() => openLesson(lesson)}
                             style={{
                                 animationDelay: `${idx * 50}ms`,
-                                backgroundImage: `linear-gradient(rgba(15, 23, 42, ${isLocked ? '0.85' : '0.6'}), rgba(15, 23, 42, ${isLocked ? '0.95' : '0.85'})), url(${imageUrl})`,
+                                backgroundImage: `linear-gradient(rgba(15, 23, 42, ${isLocked ? '0.85' : '0.2'}), rgba(15, 23, 42, ${isLocked ? '0.95' : '0.5'})), url(${imageUrl})`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center'
                             }}
