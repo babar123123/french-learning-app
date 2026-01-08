@@ -65,8 +65,8 @@ const Login = () => {
             }));
 
             playSuccess();
-            window.location.href = '#/welcome'; // Hash router fix
-            window.location.reload();
+            // Using navigate instead of reload for a smoother experience
+            navigate('/welcome');
         } catch (err) {
             setError("Google Login failed. Please try again.");
         }

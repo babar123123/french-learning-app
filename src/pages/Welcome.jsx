@@ -13,12 +13,12 @@ const Welcome = () => {
         setUser(savedUser);
 
         // Short delay for animation entry
-        const timer = setTimeout(() => setShowContent(true), 100);
+        const timer = setTimeout(() => setShowContent(true), 150);
 
-        // Auto redirect after 5 seconds if user doesn't click
+        // Increased auto-redirect to 8 seconds for better visibility
         const redirectTimer = setTimeout(() => {
             navigate('/');
-        }, 5000);
+        }, 8000);
 
         return () => {
             clearTimeout(timer);
