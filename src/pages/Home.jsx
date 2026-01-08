@@ -1,11 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Sparkles, Book, ArrowRight } from 'lucide-react';
+import { MessageCircle, Sparkles, Book, ArrowRight, Users, Zap, Globe, Info, X } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
+import { useLanguage } from '../context/LanguageContext';
 import './Home.css';
 
 const Home = () => {
-    const { playTap, playSuccess } = useSound();
+    const { playTap, playSuccess, playBlip } = useSound();
+    const { targetLanguage } = useLanguage();
+    const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+
+    const content = {
+        French: {
+            title: "Master French",
+            phrase: "Comment ça va ?",
+            reply: "Je vais très bien, merci !",
+            fact: "Did you know? French is the only language, alongside English, taught in every country in the world.",
+            details: "French is a Romance language spoken by about 300 million people. It's the official language in 29 countries including France, Canada, Belgium, and Switzerland. It's known as the language of diplomacy, art, and love."
+        },
+        Spanish: {
+            title: "Master Spanish",
+            phrase: "¿Cómo estás?",
+            reply: "¡Estoy muy bien, gracias!",
+            fact: "Did you know? Spanish is the world's second-most spoken native language after Mandarin Chinese.",
+            details: "Spanish is spoken by over 500 million people. It's the primary language in Spain and most of Latin America. It's a Phonetic language, meaning it's spoken exactly as it's written, making it one of the easiest languages to start learning!"
+        },
+        German: {
+            title: "Master German",
+            phrase: "Wie geht es dir?",
+            reply: "Mir geht es sehr gut, danke!",
+            fact: "Did you know? German words can be incredibly long. One of the longest: Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz!",
+            details: "German is the most widely spoken native language in the European Union. It's famous for its logical (yet complex) grammar and its ability to create new words by compounding smaller ones. It's the language of philosophy, science, and innovation."
+        }
+    }[targetLanguage];
 
     return (
         <div className="home-page">
@@ -13,57 +40,107 @@ const Home = () => {
             <section className="hero">
                 <div className="container hero-container">
                     <div className="hero-content animate-fade-in">
-                        <div className="badge catch-phrase">AI-Powered Fluency</div>
+                        <div className="badge catch-phrase">✨ AI-Powered {targetLanguage} Tutor</div>
                         <h1 className="hero-title">
-                            Master French <br />
+                            {content.title} <br />
                             <span className="text-gradient">With Intelligence</span>
                         </h1>
                         <p className="hero-subtitle">
-                            Immerse yourself in a new language with Lumière.
-                            Real-time corrections, cultural insights, and conversations that feel human.
+                            Immerse yourself in {targetLanguage} with Lumière.
+                            Real-time corrections, cultural insights, and conversations that feel human in Roman Urdu & English.
                         </p>
                         <div className="hero-actions">
-                            <Link to="/chat" className="btn btn-primary" onClick={playSuccess}>
-                                Start Chatting <ArrowRight size={18} />
+                            <Link to="/chat" className="btn btn-primary btn-glow" onClick={playSuccess}>
+                                Start Learning <ArrowRight size={18} />
                             </Link>
-                            <Link to="/lessons" className="btn btn-secondary" onClick={playTap}>
-                                View Lessons
+                            <Link to="/lessons" className="btn btn-secondary glass" onClick={playTap}>
+                                Explore Curriculum
                             </Link>
                         </div>
                     </div>
 
                     <div className="hero-visual animate-fade-in delay-200">
-                        {/* Abstract visual representation of AI/Chat */}
-                        <div className="visual-card glass-panel">
+                        <div className="visual-card glass-panel floating">
                             <div className="chat-bubble user">
-                                <span className="sc-text">Comment ça va ?</span>
+                                <span className="sc-text">{content.phrase}</span>
                             </div>
-                            <div className="chat-bubble ai">
-                                <span className="sc-text">Je vais très bien, merci ! Et vous ?</span>
-                                <span className="correction-indicator">Perfect usage!</span>
+                            <div className="chat-bubble ai animate-slide-up">
+                                <span className="sc-text">{content.reply}</span>
+                                <span className="correction-indicator">✓ Perfect!</span>
                             </div>
                             <div className="orbit-decoration"></div>
+                            <div className="floating-badge lang-badge">{targetLanguage}</div>
                         </div>
                     </div>
                 </div>
             </section>
 
+            {/* Quick Stats Section */}
+            <section className="stats-bar container animate-fade-in delay-300">
+                <div className="stat-item">
+                    <Users size={20} className="text-primary" />
+                    <span><strong>15k+</strong> Active Learners</span>
+                </div>
+                <div className="stat-divider"></div>
+                <div className="stat-item">
+                    <Zap size={20} className="text-accent" />
+                    <span><strong>98%</strong> Success Rate</span>
+                </div>
+                <div className="stat-divider"></div>
+                <div className="stat-item">
+                    <Globe size={20} className="text-success" />
+                    <span><strong>3</strong> Major Languages</span>
+                </div>
+            </section>
+
+            {/* Info Section - Informative Part */}
+            <section className="info-section container animate-fade-in delay-400">
+                <div className="info-card glass-panel">
+                    <div className="info-icon"><Info size={24} /></div>
+                    <div className="info-text">
+                        <h4>Informative Fact</h4>
+                        <p>{content.fact}</p>
+                    </div>
+                    <button className="btn-icon-link" onClick={() => { playBlip(); setIsInfoModalOpen(true); }}>Read More</button>
+                </div>
+            </section>
+
+            {/* Info Modal */}
+            {isInfoModalOpen && (
+                <div className="modal-overlay" onClick={() => setIsInfoModalOpen(false)}>
+                    <div className="info-modal glass-panel animate-scale-in" onClick={e => e.stopPropagation()}>
+                        <button className="close-modal" onClick={() => { playBlip(); setIsInfoModalOpen(false); }}><X size={24} /></button>
+                        <div className="modal-icon-header">
+                            <Sparkles size={40} className="text-accent" />
+                        </div>
+                        <h2>About {targetLanguage}</h2>
+                        <div className="modal-body">
+                            <p className="main-info">{content.details}</p>
+                            <div className="fact-highlight">
+                                💡 <strong>Key Fact:</strong> {content.fact}
+                            </div>
+                        </div>
+                        <button className="btn btn-primary w-full" onClick={() => setIsInfoModalOpen(false)}>Understood!</button>
+                    </div>
+                </div>
+            )}
+
             {/* Features Grid */}
             <section className="features container">
-                <div className="feature-card glass-panel animate-fade-in delay-300">
-                    <div className="icon-wrapper"><MessageCircle size={32} /></div>
+                <div className="feature-card glass-panel animate-fade-in" style={{ animationDelay: '500ms' }}>
+                    <div className="icon-wrapper i-blue"><MessageCircle size={32} /></div>
                     <h3>Natural Conversation</h3>
-                    <p>Practice with an AI that understands context, slang, and formal nuances.</p>
+                    <p>Practice with an AI that understands Roman Urdu and provides explanations in your language.</p>
                 </div>
-                <div className="feature-card glass-panel animate-fade-in delay-300">
-                    <div className="icon-wrapper"><Sparkles size={32} /></div>
+                <div className="feature-card glass-panel animate-fade-in" style={{ animationDelay: '600ms' }}>
+                    <div className="icon-wrapper i-purple"><Sparkles size={32} /></div>
                     <h3>Instant Feedback</h3>
                     <p>Get corrections on grammar and pronunciation the moment you make a mistake.</p>
                 </div>
-                <div className="feature-card glass-panel animate-fade-in delay-300">
-                    <div className="icon-wrapper"><Book size={32} /></div>
-                    <h3>Structured Path</h3>
-                    <p>Follow a curvature designed to take you from beginner to fluent.</p>
+                <div className="feature-card glass-panel animate-fade-in" style={{ animationDelay: '700ms' }}>
+                    <div className="icon-wrapper i-gold"><Book size={32} /></div>
+                    <h3>Gamified Learning</h3>
+                    <p>Earn XP, win challenges, and track your levels as you progress to fluency.</p>
                 </div>
             </section>
         </div>
