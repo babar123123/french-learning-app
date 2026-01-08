@@ -187,10 +187,6 @@ const Lessons = () => {
                             <ChevronRight size={32} />
                         </button>
                     </div>
-
-                    <div className="modal-footer">
-                        <p>Practice aloud: "{activeLesson.content[currentSlide].pronunciation}"</p>
-                    </div>
                 </div>
             )}
         </div>
