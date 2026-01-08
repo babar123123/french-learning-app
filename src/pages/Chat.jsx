@@ -102,51 +102,35 @@ const Chat = () => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
 
-        // Clean text (remove any markdown or extra punctuation)
-        const cleanText = text.replace(/[*#_\[\]]/g, '').trim();
-        if (!cleanText) return;
+        // Small delay to ensure cancellation finishes on mobile
+        setTimeout(() => {
+            const cleanText = text.replace(/[*#_\[\]]/g, '').trim();
+            if (!cleanText) return;
 
-        const langCodes = {
-            'French': 'fr-FR',
-            'Spanish': 'es-ES',
-            'German': 'de-DE'
-        };
-        const targetLangCode = langCodes[targetLanguage] || 'en-US';
+            const langCodes = { 'French': 'fr-FR', 'Spanish': 'es-ES', 'German': 'de-DE' };
+            const targetLangCode = langCodes[targetLanguage] || 'en-US';
 
-        const utterance = new SpeechSynthesisUtterance(cleanText);
-        utterance.lang = targetLangCode;
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = targetLangCode;
 
-        const availableVoices = window.speechSynthesis.getVoices();
-        const currentVoices = availableVoices.length > 0 ? availableVoices : voicesRef.current;
+            const availableVoices = window.speechSynthesis.getVoices();
+            const preferredVoice = availableVoices.find(v =>
+                v.lang.toLowerCase().replace('_', '-') === targetLangCode.toLowerCase() &&
+                (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium'))
+            ) || availableVoices.find(v => v.lang.toLowerCase().replace('_', '-') === targetLangCode.toLowerCase());
 
-        // High-precision voice selection for Mobile
-        // 1. Look for 'Google' voices (usually best on Android/Chrome)
-        // 2. Look for 'Natural' or 'Premium' (usually best on iOS/Safari)
-        // 3. Look for any matching locale
-        const preferredVoice = currentVoices.find(v =>
-            v.lang.replace('_', '-').startsWith(targetLangCode) && v.name.includes('Google')
-        ) || currentVoices.find(v =>
-            v.lang.replace('_', '-').startsWith(targetLangCode) && (v.name.includes('Natural') || v.name.includes('Premium'))
-        ) || currentVoices.find(v =>
-            v.lang.replace('_', '-').startsWith(targetLangCode)
-        );
+            if (preferredVoice) utterance.voice = preferredVoice;
 
-        if (preferredVoice) {
-            utterance.voice = preferredVoice;
-        }
+            // Stable Mobile Settings
+            utterance.rate = 0.8;
+            utterance.pitch = 1.05;
 
-        // Refined for Mobile Naturalness
-        utterance.rate = 0.88; // Slightly faster for more natural flow (prev 0.82)
-        utterance.pitch = 1.02; // Close to normal but clear
+            utterance.onstart = () => setIsSpeaking(true);
+            utterance.onend = () => setIsSpeaking(false);
+            utterance.onerror = () => setIsSpeaking(false);
 
-        utterance.onstart = () => setIsSpeaking(true);
-        utterance.onend = () => setIsSpeaking(false);
-        utterance.onerror = (e) => {
-            console.error("SpeechSynthesis error:", e);
-            setIsSpeaking(false);
-        };
-
-        window.speechSynthesis.speak(utterance);
+            window.speechSynthesis.speak(utterance);
+        }, 100);
     };
 
     const stopSpeak = () => {
