@@ -8,13 +8,14 @@ import './Game.css';
 
 const Game = () => {
     const { targetLanguage } = useLanguage();
-    const { playSuccess, playBlip, playCardSound, playTap } = useSound();
+    const { playSuccess, playBlip, playCardSound, playTap, playFanfare } = useSound();
 
     const [gameState, setGameState] = useState('menu'); // menu, playing, result
     const [score, setScore] = useState(0);
 
     useEffect(() => {
         if (gameState === 'result' && score >= 70) {
+            playFanfare();
             const duration = 3 * 1000;
             const animationEnd = Date.now() + duration;
             const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };

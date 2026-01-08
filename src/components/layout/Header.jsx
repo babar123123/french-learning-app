@@ -122,31 +122,43 @@ const Header = () => {
             ))}
 
             <div className="mobile-lang-section">
-              <p className="mobile-section-label">Target Language</p>
-              <div className={`language-selector-wrapper ${isLangOpen ? 'open' : ''}`} onClick={() => setIsLangOpen(!isLangOpen)}>
-                <Languages size={18} className="lang-icon" />
-                <span className="current-lang">{targetLanguage}</span>
-                <ChevronRight size={14} className={`chevron-icon ${isLangOpen ? 'rotate' : ''}`} />
+              <p className="mobile-section-label">Settings</p>
 
-                {isLangOpen && (
-                  <div className="lang-dropdown glass-panel">
-                    {languages.map((lang) => (
-                      <div
-                        key={lang}
-                        className={`lang-option ${targetLanguage === lang ? 'active' : ''}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTargetLanguage(lang);
-                          playBlip();
-                          setIsLangOpen(false);
-                          setIsMobileMenuOpen(false);
-                        }}
-                      >
-                        {lang}
-                      </div>
-                    ))}
-                  </div>
-                )}
+              <div className="mobile-settings-grid">
+                <div className={`language-selector-wrapper ${isLangOpen ? 'open' : ''}`} onClick={() => setIsLangOpen(!isLangOpen)}>
+                  <Languages size={18} className="lang-icon" />
+                  <span className="current-lang">{targetLanguage}</span>
+                  <ChevronRight size={14} className={`chevron-icon ${isLangOpen ? 'rotate' : ''}`} />
+
+                  {isLangOpen && (
+                    <div className="lang-dropdown glass-panel">
+                      {languages.map((lang) => (
+                        <div
+                          key={lang}
+                          className={`lang-option ${targetLanguage === lang ? 'active' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setTargetLanguage(lang);
+                            playBlip();
+                            setIsLangOpen(false);
+                            setIsMobileMenuOpen(false);
+                          }}
+                        >
+                          {lang}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  className="sound-toggle-btn mobile-s-btn"
+                  onClick={() => { toggleMute(); playBlip(); }}
+                  style={{ width: '100%', borderRadius: '12px', height: '48px', marginTop: '12px', gap: '12px' }}
+                >
+                  {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                  <span style={{ fontSize: '0.9rem', fontWeight: '600' }}>{isMuted ? "Unmute Music" : "Mute Music"}</span>
+                </button>
               </div>
             </div>
           </div>

@@ -11,7 +11,8 @@ export const SoundProvider = ({ children }) => {
         blip: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3',   // Same as card (Very stable)
         card: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3',   // The base stable sound
         tap: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',    // Light variety of the same style
-        success: 'https://assets.mixkit.co/active_storage/sfx/616/616-preview.mp3'   // A more "accomplishment" version of the click
+        success: 'https://assets.mixkit.co/active_storage/sfx/616/616-preview.mp3',   // A more "accomplishment" version of the click
+        fanfare: 'https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3'  // Victory Fanfare
     };
 
     useEffect(() => {
@@ -40,11 +41,12 @@ export const SoundProvider = ({ children }) => {
     const playCardSound = () => playSound('card');
     const playTap = () => playSound('tap');
     const playSuccess = () => playSound('success');
+    const playFanfare = () => playSound('fanfare');
 
     const toggleMute = () => setIsMuted(!isMuted);
 
     return (
-        <SoundContext.Provider value={{ isMuted, toggleMute, playBlip, playCardSound, playTap, playSuccess }}>
+        <SoundContext.Provider value={{ isMuted, toggleMute, playBlip, playCardSound, playTap, playSuccess, playFanfare }}>
             {children}
         </SoundContext.Provider>
     );
