@@ -117,6 +117,34 @@ const Header = () => {
                 {link.name}
               </Link>
             ))}
+
+            <div className="mobile-lang-section">
+              <p className="mobile-section-label">Target Language</p>
+              <div className={`language-selector-wrapper ${isLangOpen ? 'open' : ''}`} onClick={() => setIsLangOpen(!isLangOpen)}>
+                <Languages size={18} className="lang-icon" />
+                <span className="current-lang">{targetLanguage}</span>
+                <ChevronRight size={14} className={`chevron-icon ${isLangOpen ? 'rotate' : ''}`} />
+
+                {isLangOpen && (
+                  <div className="lang-dropdown glass-panel">
+                    {languages.map((lang) => (
+                      <div
+                        key={lang}
+                        className={`lang-option ${targetLanguage === lang ? 'active' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setTargetLanguage(lang);
+                          playBlip();
+                          setIsLangOpen(false);
+                        }}
+                      >
+                        {lang}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>

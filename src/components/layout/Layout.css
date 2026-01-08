@@ -231,4 +231,27 @@
     .mobile-nav-link:hover {
         background: rgba(255, 255, 255, 0.05);
     }
+
+    .mobile-lang-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-section-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+    }
+
+    .mobile-lang-section .language-selector-wrapper {
+        width: 100%;
+    }
+
+    .mobile-lang-section .lang-dropdown {
+        top: auto;
+        bottom: calc(100% + 12px);
+    }
 }
