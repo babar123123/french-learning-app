@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, User, Bot, Sparkles, AlertCircle, Mic, MicOff, Volume2, Settings, VolumeX, HelpCircle, X, ExternalLink, Eye, EyeOff } from 'lucide-react';
+import { Send, User, Bot, Sparkles, AlertCircle, Mic, MicOff, Volume2, Settings, VolumeX, HelpCircle, X, ExternalLink, Eye, EyeOff, Languages } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useLanguage } from '../context/LanguageContext';
 import './Chat.css';
@@ -210,27 +210,35 @@ const Chat = () => {
                 systemInstruction: {
                     role: "system",
                     parts: [{
-                        text: `You are Lumière, a friendly and energetic ${targetLanguage} tutor. You are an expert in Roman Urdu, English, and ${targetLanguage}.
+                        text: `You are Lumière, a friendly ${targetLanguage} tutor.
+                        
+IMPORTANT: You MUST always respond in a raw JSON format like this:
+{
+  "text": "[Continuous ${targetLanguage} response here]",
+  "translation": "[English/Roman Urdu translation here]"
+}
 
-YOUR MISSION:
-Explain ${targetLanguage} words and concepts using a natural mix of English and Roman Urdu.
-
-COMMUNICATION RULES:
-1. Stay conversational but focused. After a friendly greeting, get straight to the point.
-2. Mix English and Roman Urdu naturally (Latin script).
-3. When teaching a word or phrase, ALWAYS use this EXACT format with a NEW LINE for each item:
-   **${targetLanguage}:** [Word]
-   **Matlab/Meaning:** [English/Roman Urdu Meaning]
-   **Pronunciation:** [Easy to read guide]
-4. ALWAYS provide the translation for any specific word the user asks about or any greeting.
-5. Be encouraging: 'Zabardast!', 'Excellent!', 'Bohat khoob!'.
-6. Do not let responses cut off. Keep them concise but complete.` }]
+RULES:
+1. The 'text' field MUST be 100% in ${targetLanguage}. No English/Urdu.
+2. The 'translation' field should be a clear translation in a mix of English and Roman Urdu.
+3. Keep the conversation natural and encouraging.
+4. Correct user mistakes in the translation part if needed.
+5. Do NOT include any markdown outside the JSON.` }]
                 }
             });
 
             const result = await chat.sendMessage(userInput);
             const response = await result.response;
-            return response.text();
+            const text = response.text();
+
+            try {
+                // Ensure text is trimmed of any accidental backticks or markdown
+                const cleanJson = text.replace(/```json|```/g, '').trim();
+                return JSON.parse(cleanJson);
+            } catch (e) {
+                console.error("Parse Error:", e);
+                return { text: text, translation: "Format error. Use the 'Translate' icon to see if possible." };
+            }
         } catch (error) {
             console.error("API Error detailed:", error);
 
@@ -266,17 +274,37 @@ COMMUNICATION RULES:
         setInputText('');
         setIsTyping(true);
 
-        const responseText = await generateResponse(currentHistory, userMsg.text);
+        try {
+            const currentHistory = messages.slice(-10);
+            const responseData = await generateResponse(currentHistory, userMsg.text);
 
-        const aiMsg = {
-            id: Date.now() + 1,
-            sender: 'ai',
-            text: responseText
-        };
+            const aiMsg = {
+                id: Date.now() + 1,
+                sender: 'ai',
+                text: typeof responseData === 'object' ? responseData.text : responseData,
+                translation: typeof responseData === 'object' ? responseData.translation : null,
+                showTranslation: false
+            };
 
-        setMessages(prev => [...prev, aiMsg]);
-        setIsTyping(false);
-        speak(responseText); // Automatic TTS for response
+            setMessages(prev => [...prev, aiMsg]);
+            setIsTyping(false);
+            speak(aiMsg.text);
+        } catch (err) {
+            setIsTyping(false);
+            const errMsg = {
+                id: Date.now() + 1,
+                sender: 'ai',
+                text: "Désolé, an error occurred: " + err.message,
+                isError: true
+            };
+            setMessages(prev => [...prev, errMsg]);
+        }
+    };
+
+    const toggleTranslation = (id) => {
+        setMessages(prev => prev.map(msg =>
+            msg.id === id ? { ...msg, showTranslation: !msg.showTranslation } : msg
+        ));
     };
 
     return (
@@ -382,10 +410,18 @@ COMMUNICATION RULES:
                             </div>
                             <div className="message-content">
                                 <p>{msg.text}</p>
+                                {msg.showTranslation && msg.translation && (
+                                    <p className="message-translation animate-fade-in">
+                                        <em>{msg.translation}</em>
+                                    </p>
+                                )}
                                 {msg.sender === 'ai' && (
                                     <div className="speech-controls">
                                         <button className="speak-msg-btn" onClick={() => speak(msg.text)}>
                                             <Volume2 size={14} /> Listen
+                                        </button>
+                                        <button className="speak-msg-btn translate-btn" onClick={() => toggleTranslation(msg.id)}>
+                                            <Languages size={14} /> {msg.showTranslation ? 'Hide' : 'Translate'}
                                         </button>
                                         {isSpeaking && (
                                             <button className="speak-msg-btn mute-btn" onClick={stopSpeak}>
