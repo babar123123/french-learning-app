@@ -44,7 +44,8 @@
 
 .hero-actions {
     display: flex;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .visual-card {
@@ -379,5 +380,25 @@
         flex-direction: column;
         text-align: center;
         padding: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-container {
+        padding: 0 10px;
     }
 }
