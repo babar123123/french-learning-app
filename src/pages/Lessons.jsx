@@ -243,19 +243,8 @@ const Lessons = () => {
 
             <div className="lessons-grid">
                 {filteredLessons.map((lesson, idx) => {
-                    const gradients = [
-                        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                        'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-                        'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-                        'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
-                        'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-                        'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
-                        'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-                        'linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)',
-                    ];
-                    const gradient = gradients[idx % gradients.length];
+                    const imageId = 100 + idx;
+                    const imageUrl = `https://picsum.photos/seed/${imageId}/600/400`;
 
                     return (
                         <div
@@ -264,7 +253,9 @@ const Lessons = () => {
                             onClick={() => openLesson(lesson)}
                             style={{
                                 animationDelay: `${idx * 50}ms`,
-                                background: gradient
+                                backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.85)), url(${imageUrl})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center'
                             }}
                         >
                             <div className="lesson-card-badge">Unit {idx + 1}</div>
