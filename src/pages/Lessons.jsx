@@ -55,7 +55,10 @@ const Lessons = () => {
         // Cancel any current speech
         window.speechSynthesis.cancel();
 
-        const utterance = new SpeechSynthesisUtterance(text);
+        // Fix: Lowercase single letters so TTS doesn't say "Majuscule" (Capital)
+        const speechText = text.length === 1 ? text.toLowerCase() : text;
+
+        const utterance = new SpeechSynthesisUtterance(speechText);
         const langMap = { 'French': 'fr-FR', 'Spanish': 'es-ES', 'German': 'de-DE' };
         utterance.lang = langMap[targetLanguage] || 'fr-FR';
         utterance.rate = 0.8;
@@ -70,7 +73,7 @@ const Lessons = () => {
         window.speechSynthesis.speak(utterance);
 
         // Debug log
-        console.log("Speaking:", text);
+        console.log("Speaking:", speechText);
     };
 
     const filteredLessons = lessonsData.filter(l => l.level === activeTab);
