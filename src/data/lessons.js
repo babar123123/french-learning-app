@@ -1,0 +1,337 @@
+export const lessonsData = [
+    {
+        id: 1,
+        title: "Les Salutations",
+        subtitle: "Greetings & Basics",
+        level: "Beginner",
+        image: "https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Bonjour", english: "Hello", pronunciation: "bon-zhoor" },
+            { french: "Au revoir", english: "Goodbye", pronunciation: "oh-ruh-vwar" },
+            { french: "S'il vous plaît", english: "Please", pronunciation: "seel-voo-play" },
+            { french: "Merci", english: "Thank you", pronunciation: "mehr-see" },
+            { french: "Comment ça va ?", english: "How are you?", pronunciation: "koh-mah sah vah" },
+            { french: "Je m'appelle...", english: "My name is...", pronunciation: "zhuh mah-pel" },
+            { french: "Bonsoir", english: "Good evening", pronunciation: "bon-swar" },
+            { french: "Bonne nuit", english: "Good night", pronunciation: "bun nwee" },
+            { french: "À bientôt", english: "See you soon", pronunciation: "ah byehn-toh" },
+            { french: "Pardon", english: "Sorry/Excuse me", pronunciation: "par-dohn" }
+        ]
+    },
+    {
+        id: 2,
+        title: "Au Café",
+        subtitle: "Ordering Food & Drink",
+        level: "Beginner",
+        image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Un café, s'il vous plaît", english: "A coffee, please", pronunciation: "uh kah-fay" },
+            { french: "L'addition", english: "The bill", pronunciation: "lah-dee-syon" },
+            { french: "Je voudrais...", english: "I would like...", pronunciation: "zhuh voo-dray" },
+            { french: "C'est délicieux", english: "It is delicious", pronunciation: "say day-lee-syuh" },
+            { french: "Une baguette", english: "A baguette", pronunciation: "oon bah-get" },
+            { french: "De l'eau", english: "Some water", pronunciation: "duh lo" },
+            { french: "J'ai faim", english: "I am hungry", pronunciation: "zhay fah" },
+            { french: "J'ai soif", english: "I am thirsty", pronunciation: "zhay swaf" }
+        ]
+    },
+    {
+        id: 3,
+        title: "Les Directions",
+        subtitle: "Getting Around",
+        level: "Intermediate",
+        image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Où est la gare ?", english: "Where is the station?", pronunciation: "oo ay lah gar" },
+            { french: "À droite", english: "To the right", pronunciation: "ah drwaht" },
+            { french: "À gauche", english: "To the left", pronunciation: "ah gohst" },
+            { french: "Tout droit", english: "Straight ahead", pronunciation: "too drwah" },
+            { french: "Loin", english: "Far", pronunciation: "lwan" },
+            { french: "Près", english: "Near", pronunciation: "pray" },
+            { french: "La rue", english: "The street", pronunciation: "lah roo" },
+            { french: "Le plan", english: "The map", pronunciation: "luh plahn" }
+        ]
+    },
+    {
+        id: 4,
+        title: "La Famille",
+        subtitle: "Family Members",
+        level: "Beginner",
+        image: "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "La mère", english: "The mother", pronunciation: "lah mair" },
+            { french: "Le père", english: "The father", pronunciation: "luh pair" },
+            { french: "Le frère", english: "The brother", pronunciation: "luh frair" },
+            { french: "La soeur", english: "The sister", pronunciation: "lah sur" },
+            { french: "La grand-mère", english: "The grandmother", pronunciation: "lah gran-mair" },
+            { french: "Le grand-père", english: "The grandfather", pronunciation: "luh gran-pair" }
+        ]
+    },
+    {
+        id: 5,
+        title: "Les Chiffres",
+        subtitle: "Numbers 1-100",
+        level: "Beginner",
+        image: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Un", english: "1", pronunciation: "uh" },
+            { french: "Deux", english: "2", pronunciation: "duh" },
+            { french: "Trois", english: "3", pronunciation: "trwah" },
+            { french: "Quatre", english: "4", pronunciation: "katr" },
+            { french: "Cinq", english: "5", pronunciation: "sank" },
+            { french: "Six", english: "6", pronunciation: "sees" },
+            { french: "Sept", english: "7", pronunciation: "set" },
+            { french: "Huit", english: "8", pronunciation: "weet" },
+            { french: "Neuf", english: "9", pronunciation: "nuf" },
+            { french: "Dix", english: "10", pronunciation: "dees" },
+            { french: "Vingt", english: "20", pronunciation: "vahn" },
+            { french: "Trente", english: "30", pronunciation: "trahnt" },
+            { french: "Quarante", english: "40", pronunciation: "kah-rahnt" },
+            { french: "Cinquante", english: "50", pronunciation: "san-kahnt" },
+            { french: "Soixante", english: "60", pronunciation: "swah-sahnt" },
+            { french: "Soixante-dix", english: "70", pronunciation: "swah-sahnt-dees" },
+            { french: "Quatre-vingts", english: "80", pronunciation: "katr-vahn" },
+            { french: "Quatre-vingt-un", english: "81", pronunciation: "katr-vahn-uh" },
+            { french: "Quatre-vingt-deux", english: "82", pronunciation: "katr-vahn-duh" },
+            { french: "Quatre-vingt-trois", english: "83", pronunciation: "katr-vahn-trwah" },
+            { french: "Quatre-vingt-quatre", english: "84", pronunciation: "katr-vahn-katr" },
+            { french: "Quatre-vingt-cinq", english: "85", pronunciation: "katr-vahn-sank" },
+            { french: "Quatre-vingt-six", english: "86", pronunciation: "katr-vahn-sees" },
+            { french: "Quatre-vingt-sept", english: "87", pronunciation: "katr-vahn-set" },
+            { french: "Quatre-vingt-huit", english: "88", pronunciation: "katr-vahn-weet" },
+            { french: "Quatre-vingt-neuf", english: "89", pronunciation: "katr-vahn-nuf" },
+            { french: "Quatre-vingt-dix", english: "90", pronunciation: "katr-vahn-dees" },
+            { french: "Quatre-vingt-onze", english: "91", pronunciation: "katr-vahn-ohnz" },
+            { french: "Quatre-vingt-douze", english: "92", pronunciation: "katr-vahn-dooz" },
+            { french: "Quatre-vingt-treize", english: "93", pronunciation: "katr-vahn-trehz" },
+            { french: "Quatre-vingt-quatorze", english: "94", pronunciation: "katr-vahn-kah-torz" },
+            { french: "Quatre-vingt-quinze", english: "95", pronunciation: "katr-vahn-kanz" },
+            { french: "Quatre-vingt-seize", english: "96", pronunciation: "katr-vahn-sehz" },
+            { french: "Quatre-vingt-dix-sept", english: "97", pronunciation: "katr-vahn-dee-set" },
+            { french: "Quatre-vingt-dix-huit", english: "98", pronunciation: "katr-vahn-dee-zweet" },
+            { french: "Quatre-vingt-dix-neuf", english: "99", pronunciation: "katr-vahn-dee-nuf" },
+            { french: "Cent", english: "100", pronunciation: "sahn" }
+        ]
+    },
+    {
+        id: 6,
+        title: "Le Corps Humain",
+        subtitle: "The Human Body",
+        level: "Beginner",
+        image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "La tête", english: "The head", pronunciation: "lah tet" },
+            { french: "Le visage", english: "The face", pronunciation: "luh vee-zahzh" },
+            { french: "Les yeux", english: "The eyes", pronunciation: "lay zyuh" },
+            { french: "Le nez", english: "The nose", pronunciation: "luh nay" },
+            { french: "La bouche", english: "The mouth", pronunciation: "lah boosh" },
+            { french: "Les oreilles", english: "The ears", pronunciation: "lay zoh-ray-yuh" },
+            { french: "Le cou", english: "The neck", pronunciation: "luh koo" },
+            { french: "L'épaule", english: "The shoulder", pronunciation: "lay-pohl" },
+            { french: "Le bras", english: "The arm", pronunciation: "luh brah" },
+            { french: "La main", english: "The hand", pronunciation: "lah mah" },
+            { french: "Le doigt", english: "The finger", pronunciation: "luh dwah" },
+            { french: "Le ventre", english: "The stomach", pronunciation: "luh vahn-truh" },
+            { french: "Le dos", english: "The back", pronunciation: "luh doh" },
+            { french: "La jambe", english: "The leg", pronunciation: "lah zhahmb" },
+            { french: "Le genou", english: "The knee", pronunciation: "luh zhuh-noo" },
+            { french: "Le pied", english: "The foot", pronunciation: "luh pyay" }
+        ]
+    },
+    {
+        id: 7,
+        title: "Conversation de Base",
+        subtitle: "A2 Level Dialogue",
+        level: "Intermediate",
+        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Pouvez-vous m'aider ?", english: "Can you help me?", pronunciation: "poo-vay voo may-day" },
+            { french: "Qu'est-ce que tu fais ?", english: "What are you doing?", pronunciation: "kes-kuh too fay" },
+            { french: "Je ne comprends pas", english: "I don't understand", pronunciation: "zhuh nuh kohm-prahn pah" },
+            { french: "Répétez, s'il vous plaît", english: "Repeat, please", pronunciation: "ray-pay-tay seel voo play" },
+            { french: "Où habites-tu ?", english: "Where do you live?", pronunciation: "oo ah-beet-too" },
+            { french: "Est-ce que tu es libre ?", english: "Are you free?", pronunciation: "es-kuh too ay lee-bruh" },
+            { french: "C'est une bonne idée !", english: "That's a good idea!", pronunciation: "say-toon bun ee-day" },
+            { french: "Je suis d'accord", english: "I agree", pronunciation: "zhuh swee dah-kor" },
+            { french: "Quel temps fait-il ?", english: "How is the weather?", pronunciation: "kel tahm fay-teel" },
+            { french: "Ça coûte combien ?", english: "How much does it cost?", pronunciation: "sah koot kohm-byah" },
+            { french: "Enchanté(e) !", english: "Nice to meet you!", pronunciation: "ahn-shahn-tay" },
+            { french: "À tout à l'heure", english: "See you later", pronunciation: "ah too-tah-luh" }
+        ]
+    },
+    {
+        id: 8,
+        title: "Vie Quotidienne",
+        subtitle: "Daily Routines",
+        level: "Intermediate",
+        image: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Je me réveille à sept heures", english: "I wake up at 7 o'clock", pronunciation: "zhuh muh ray-vay ah set ur" },
+            { french: "Je prends mon petit-déjeuner", english: "I am having breakfast", pronunciation: "zhuh prahn mohn puh-tee-day-zhuh-nay" },
+            { french: "Je vais au travail", english: "I am going to work", pronunciation: "zhuh vay oh trah-vye" },
+            { french: "On y va ?", english: "Shall we go?", pronunciation: "ohn ee vah" },
+            { french: "Je suis fatigué(e)", english: "I am tired", pronunciation: "zhuh swee fah-tee-gay" },
+            { french: "Il est tard", english: "It is late", pronunciation: "eel ay tar" },
+            { french: "Bonne journée !", english: "Have a good day!", pronunciation: "bun zhoor-nay" },
+            { french: "Dépêche-toi !", english: "Hurry up!", pronunciation: "day-pesh-twah" }
+        ]
+    },
+    {
+        id: 9,
+        title: "Faire du Shopping",
+        subtitle: "Shopping & Requests",
+        level: "Intermediate",
+        image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Je regarde seulement", english: "I'm just looking", pronunciation: "zhuh ruh-gard suhl-mahn" },
+            { french: "C'est trop cher", english: "It's too expensive", pronunciation: "say troh shair" },
+            { french: "C'est bon marché", english: "It's a good deal/cheap", pronunciation: "say bohn mar-shay" },
+            { french: "Vous acceptez la carte ?", english: "Do you accept cards?", pronunciation: "voo-zah-sep-tay lah kart" },
+            { french: "Où sont les cabines ?", english: "Where are the fitting rooms?", pronunciation: "oo sohn lay kah-been" },
+            { french: "Quelle taille ?", english: "What size?", pronunciation: "kel tye" },
+            { french: "Je le prends", english: "I'll take it", pronunciation: "zhuh luh prahn" },
+            { french: "C'est en solde ?", english: "Is it on sale?", pronunciation: "say-tahn sohld" }
+        ]
+    },
+    {
+        id: 10,
+        title: "Poser des Questions",
+        subtitle: "How to Ask Anything",
+        level: "Beginner",
+        image: "https://images.unsplash.com/photo-1541233349642-6e425fe6190e?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Qui ?", english: "Who?", pronunciation: "kee" },
+            { french: "Quoi ?", english: "What?", pronunciation: "kwah" },
+            { french: "Où ?", english: "Where?", pronunciation: "oo" },
+            { french: "Quand ?", english: "When?", pronunciation: "kahn" },
+            { french: "Pourquoi ?", english: "Why?", pronunciation: "poor-kwah" },
+            { french: "Comment ?", english: "How?", pronunciation: "koh-mahn" },
+            { french: "Combien ?", english: "How many/much?", pronunciation: "kohm-byah" },
+            { french: "Quel / Quelle ?", english: "Which / What?", pronunciation: "kel" },
+            { french: "À quelle heure ?", english: "At what time?", pronunciation: "ah kel ur" },
+            { french: "Qui est-ce ?", english: "Who is it?", pronunciation: "kee es" },
+            { french: "Qu'est-ce que c'est ?", english: "What is it?", pronunciation: "kes-kuh say" },
+            { french: "Où allez-vous ?", english: "Where are you going?", pronunciation: "oo ah-lay voo" },
+            { french: "C'est vrai ?", english: "Is it true?", pronunciation: "say vray" },
+            { french: "D'accord ?", english: "Okay? / Agreed?", pronunciation: "dah-kor" }
+        ]
+    },
+    {
+        id: 11,
+        title: "Dialogue au Magasin",
+        subtitle: "Shopping Conversation",
+        level: "Conversation",
+        image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Bonjour ! Puis-je vous aider ?", english: "Hello! Can I help you?", pronunciation: "bon-zhoor! pwee-zhuh voo-zay-day" },
+            { french: "Oui, je cherche un t-shirt bleu.", english: "Yes, I'm looking for a blue t-shirt.", pronunciation: "wee, zhuh shairsh uh tee-shert bluh" },
+            { french: "Quelle est votre taille ?", english: "What is your size?", pronunciation: "kel ay vot-ruh tye" },
+            { french: "Je fais du M.", english: "I am a medium.", pronunciation: "zhuh fay doo em" },
+            { french: "Voici un beau modèle. Voulez-vous l'essayer ?", english: "Here is a nice model. Do you want to try it on?", pronunciation: "vwah-see uh boh mo-del. voo-lay voo lay-say-yay" },
+            { french: "Oui, où sont les cabines ?", english: "Yes, where are the fitting rooms?", pronunciation: "wee, oo sohn lay kah-been" },
+            { french: "C'est par là, à droite.", english: "It's over there, on the right.", pronunciation: "say par lah, ah drwaht" },
+            { french: "Il me va bien ! Ça coûte combien ?", english: "It fits me well! How much is it?", pronunciation: "eel muh vah byah! sah koot kohm-byah" },
+            { french: "C'est trente euros, s'il vous plaît.", english: "It's thirty euros, please.", pronunciation: "say trahnt uh-roh, seel voo play" },
+            { french: "Je le prends.", english: "I'll take it.", pronunciation: "zhuh luh prahn" },
+            { french: "Très bien. Suivez-moi à la caisse.", english: "Very well. Follow me to the checkout.", pronunciation: "tray byah. swee-vay mwah ah lah kes" },
+            { french: "Avez-vous un compte client ?", english: "Do you have a customer account?", pronunciation: "ah-vay voo-uh kohm-klayu" },
+            { french: "Non, je n'en ai pas.", english: "No, I don't have one.", pronunciation: "nohn, zhuh nah-nay pah" },
+            { french: "Voulez-vous en créer un ? C'est gratuit.", english: "Do you want to create one? It's free.", pronunciation: "voo-lay voo-zahn kray-ay uh? say grah-twee" },
+            { french: "Oui, volontiers.", english: "Yes, gladly.", pronunciation: "wee, vo-lohn-tyay" },
+            { french: "C'est fait ! Ça fera trente euros, s'il vous plaît.", english: "It's done! That will be 30 euros, please.", pronunciation: "say fay! sah fuh-rah trahnt uh-roh" },
+            { french: "Voilà. Merci, au revoir !", english: "There you go. Thanks, goodbye!", pronunciation: "vwah-lah. mehr-see, oh ruh-vwar" }
+        ]
+    },
+    {
+        id: 12,
+        title: "Au Restaurant",
+        subtitle: "Ordering a Meal",
+        level: "Conversation",
+        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Une table pour deux, s'il vous plaît.", english: "A table for two, please.", pronunciation: "oon tah-bluh poor duh, seel voo play" },
+            { french: "Suivez-moi. Voici la carte.", english: "Follow me. Here is the menu.", pronunciation: "swee-vay mwa. vwah-see lah kart" },
+            { french: "Vous avez choisi ?", english: "Have you decided?", pronunciation: "voo-zah-vay shwah-zee" },
+            { french: "Oui, je voudrais le steak-frites.", english: "Yes, I would like the steak and fries.", pronunciation: "wee, zhuh voo-dray luh steak-freet" },
+            { french: "Quelle cuisson pour la viande ?", english: "How would you like your meat cooked?", pronunciation: "kel kwee-sohn poor lah vyahnd" },
+            { french: "À point, s'il vous plaît.", english: "Medium, please.", pronunciation: "ah pwahn, seel voo play" },
+            { french: "Et comme boisson ?", english: "And for a drink?", pronunciation: "ay kohm bwah-sohn" },
+            { french: "Un verre de vin rouge.", english: "A glass of red wine.", pronunciation: "uh vair duh vahn roozh" },
+            { french: "Tout s'est bien passé ?", english: "Was everything okay?", pronunciation: "too say byah pah-say" },
+            { french: "Oui, c'était délicieux ! L'addition, s'il vous plaît.", english: "Yes, it was delicious! The bill, please.", pronunciation: "wee, say-tay day-lee-syuh! lah-dee-syohn, seel voo play" }
+        ]
+    },
+    {
+        id: 13,
+        title: "Prendre Rendez-vous",
+        subtitle: "Making an Appointment",
+        level: "Conversation",
+        image: "https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Bonjour, je voudrais prendre un rendez-vous.", english: "Hello, I would like to make an appointment.", pronunciation: "bon-zhoor, zhuh voo-dray prahn-druh uh rahn-day-voo" },
+            { french: "C'est pour quel médecin ?", english: "For which doctor?", pronunciation: "say poor kel may-duh-sahn" },
+            { french: "C'est pour un contrôle médical.", english: "It is for a medical check-up.", pronunciation: "say poor uh kohn-trohl may-dee-kahl" },
+            { french: "Quand êtes-vous disponible ?", english: "When are you available?", pronunciation: "kahn et-voo dees-po-neeb-luh" },
+            { french: "Est-ce que vous avez de la place demain ?", english: "Do you have an opening tomorrow?", pronunciation: "es-kuh voo-zah-vay duh lah plahs duh-mahn" },
+            { french: "Oui, à quelle heure ?", english: "Yes, at what time?", pronunciation: "wee, ah kel ur" },
+            { french: "À quinze heures, c'est possible ?", english: "At 3 PM, is it possible?", pronunciation: "ah kanz ur, say po-seeb-luh" },
+            { french: "C'est parfait. Quel est votre nom ?", english: "That's perfect. What is your name?", pronunciation: "say par-fay. kel ay vot-ruh nohn" },
+            { french: "Mon nom est [Votre Nom].", english: "My name is [Your Name].", pronunciation: "mohn nohn ay..." },
+            { french: "C'est noté. Merci, au revoir !", english: "It's noted. Thank you, goodbye!", pronunciation: "say no-tay. mehr-see, oh ruh-vwar" }
+        ]
+    },
+    {
+        id: 14,
+        title: "À l'Hôtel",
+        subtitle: "Checking into a Room",
+        level: "Conversation",
+        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Bonjour, j'ai une réservation.", english: "Hello, I have a reservation.", pronunciation: "bon-zhoor, zhay oon ray-zair-vah-syohn" },
+            { french: "À quel nom, s'il vous plaît ?", english: "In what name, please?", pronunciation: "ah kel nohn, seel voo play" },
+            { french: "C'est au nom de [Votre Nom].", english: "It's in the name of [Your Name].", pronunciation: "say oh nohn duh..." },
+            { french: "C'est pour combien de nuits ?", english: "For how many nights?", pronunciation: "say poor kohm-byah duh nwee" },
+            { french: "Pour deux nuits.", english: "For two nights.", pronunciation: "poor duh nwee" },
+            { french: "Voici votre clé. C'est la chambre 204.", english: "Here is your key. It's room 204.", pronunciation: "vwah-see vot-ruh klay. say lah shahm-bruh..." },
+            { french: "À quelle heure est le petit-déjeuner ?", english: "What time is breakfast?", pronunciation: "ah kel ur ay luh puh-tee-day-zhuh-nay" },
+            { french: "De sept heures à dix heures.", english: "From 7 AM to 10 AM.", pronunciation: "duh set ur ah dees ur" },
+            { french: "Merci. Est-ce qu'il y a le Wi-Fi ?", english: "Thank you. Is there Wi-Fi?", pronunciation: "mehr-see. es-keel ee ah luh wee-fee" }
+        ]
+    },
+    {
+        id: 15,
+        title: "À la Gare",
+        subtitle: "Buying a Train Ticket",
+        level: "Conversation",
+        image: "https://images.unsplash.com/photo-1515165562839-978bbcf18277?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Bonjour, je voudrais un billet pour Paris.", english: "Hello, I would like a ticket to Paris.", pronunciation: "bon-zhoor, zhuh voo-dray uh bee-yay poor pah-ree" },
+            { french: "Aller simple ou aller-retour ?", english: "One-way or round trip?", pronunciation: "ah-lay sam-pluh oo ah-lay-ruh-toor" },
+            { french: "Un aller-retour, s'il vous plaît.", english: "A round trip, please.", pronunciation: "uh ah-lay-ruh-toor, seel voo play" },
+            { french: "En première ou deuxième classe ?", english: "First or second class?", pronunciation: "ahn pruh-myair oo duh-zyem klahs" },
+            { french: "En deuxième classe.", english: "In second class.", pronunciation: "ahn duh-zyem klahs" },
+            { french: "C'est combien ?", english: "How much is it?", pronunciation: "say kohm-byah" },
+            { french: "C'est quarante-cinq euros.", english: "It's 45 euros.", pronunciation: "say kah-rahnt-sank uh-roh" },
+            { french: "Le train part de quel quai ?", english: "The train leaves from which platform?", pronunciation: "luh trahn par duh kel kay" },
+            { french: "Du quai numéro trois.", english: "From platform number three.", pronunciation: "doo kay noo-may-roh trwah" }
+        ]
+    },
+    {
+        id: 16,
+        title: "En Urgence",
+        subtitle: "Handling Emergencies",
+        level: "Intermediate",
+        image: "https://images.unsplash.com/photo-1583324113626-70df0f4dfab5?auto=format&fit=crop&q=80&w=800",
+        content: [
+            { french: "Au secours !", english: "Help!", pronunciation: "oh suh-koor" },
+            { french: "Aidez-moi, s'il vous plaît !", english: "Help me, please!", pronunciation: "ay-day mwah, seel voo play" },
+            { french: "Appelez une ambulance !", english: "Call an ambulance!", pronunciation: "ah-puh-lay oon am-boo-lahns" },
+            { french: "Où est l'hôpital le plus proche ?", english: "Where is the nearest hospital?", pronunciation: "oo ay lo-pee-tahl luh ploo prosh" },
+            { french: "J'ai eu un accident.", english: "I had an accident.", pronunciation: "zhay oo uh-nak-see-dahn" },
+            { french: "On m'a volé mon sac.", english: "Someone stole my bag.", pronunciation: "ohn mah vo-lay mohn sahk" },
+            { french: "Où est le poste de police ?", english: "Where is the police station?", pronunciation: "oo ay luh post duh po-lees" },
+            { french: "Je ne me sens pas bien.", english: "I don't feel well.", pronunciation: "zhuh nuh muh sahn pah byah" },
+            { french: "C'est une urgence !", english: "It's an emergency!", pronunciation: "say-toon oor-zhahns" }
+        ]
+    }
+];
