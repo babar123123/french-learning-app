@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, User, Bot, Sparkles, AlertCircle } from 'lucide-react';
+import { Send, User, Bot, Sparkles, AlertCircle, Mic, MicOff, Volume2 } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useLanguage } from '../context/LanguageContext';
 import './Chat.css';
@@ -26,16 +26,84 @@ const Chat = () => {
         setMessages([INITIAL_MESSAGE]);
     }, [targetLanguage]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0); // Open page from start
+    }, []);
+
     const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || 'AIzaSyAQmraYDNqo0R4-zTQKxRei0s4g4tp03_g');
     const [showKeyInput, setShowKeyInput] = useState(false);
+    const [isListening, setIsListening] = useState(false);
     const messagesEndRef = useRef(null);
+    const recognitionRef = useRef(null);
+
+    // Initialize Speech Recognition
+    useEffect(() => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            recognitionRef.current = new SpeechRecognition();
+            recognitionRef.current.continuous = true;
+            recognitionRef.current.interimResults = true;
+            recognitionRef.current.lang = 'en-US'; // Best for mixed Roman Urdu/English
+
+            recognitionRef.current.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                if (transcript) {
+                    setInputText(transcript);
+                    console.log("Speach detected:", transcript);
+                }
+            };
+
+            recognitionRef.current.onerror = (e) => {
+                console.error("Mic error:", e.error);
+                setIsListening(false);
+            };
+
+            recognitionRef.current.onend = () => setIsListening(false);
+        }
+    }, []);
+
+    const toggleListening = () => {
+        if (isListening) {
+            recognitionRef.current?.stop();
+            setIsListening(false);
+        } else {
+            try {
+                recognitionRef.current?.start();
+                setIsListening(true);
+            } catch (e) {
+                console.error("Speech recognition error:", e);
+            }
+        }
+    };
+
+    const speak = (text) => {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        const langCodes = {
+            'French': 'fr-FR',
+            'Spanish': 'es-ES',
+            'German': 'de-DE'
+        };
+        utterance.lang = langCodes[targetLanguage] || 'en-US';
+        utterance.rate = 0.95;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
+    };
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
     useEffect(() => {
-        scrollToBottom();
+        // Only scroll to bottom if we have an actual conversation (more than just the welcome message)
+        if (messages.length > 1 || isTyping) {
+            scrollToBottom();
+        }
     }, [messages, isTyping]);
 
     const saveKey = (key) => {
@@ -126,10 +194,16 @@ const Chat = () => {
 
         setMessages(prev => [...prev, aiMsg]);
         setIsTyping(false);
+        speak(responseText); // Automatic TTS for response
     };
 
     return (
-        <div className="chat-page container">
+        <div className="chat-page container animate-fade-in">
+            <div className="chat-page-header">
+                <h1 className="text-gradient">AI Tutor Duo</h1>
+                <p className="subtitle">Practice your {targetLanguage} conversationally with Lumière.</p>
+            </div>
+
             <div className="chat-container glass-panel">
                 <div className="chat-header">
                     <div className="ai-profile">
@@ -141,12 +215,6 @@ const Chat = () => {
                             <span className="status-dot">Online</span>
                         </div>
                     </div>
-                    <button
-                        className="btn btn-secondary btn-sm"
-                        onClick={() => setShowKeyInput(!showKeyInput)}
-                    >
-                        <Sparkles size={16} /> API Key
-                    </button>
                 </div>
 
                 {showKeyInput && (
@@ -175,6 +243,11 @@ const Chat = () => {
                             </div>
                             <div className="message-content">
                                 <p>{msg.text}</p>
+                                {msg.sender === 'ai' && (
+                                    <button className="speak-msg-btn" onClick={() => speak(msg.text)}>
+                                        <Volume2 size={14} />
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -194,10 +267,17 @@ const Chat = () => {
                         type="text"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder={`Type your message in ${targetLanguage}...`}
-                        className="chat-input"
+                        placeholder={isListening ? "Listening... Speak now!" : `Type your message in ${targetLanguage}...`}
+                        className={`chat-input ${isListening ? 'active-listening' : ''}`}
                     />
-                    <button type="submit" className="btn btn-primary send-btn" disabled={!inputText.trim()}>
+                    <button
+                        type="button"
+                        className={`mic-btn ${isListening ? 'listening' : ''}`}
+                        onClick={toggleListening}
+                    >
+                        {isListening ? <MicOff size={20} /> : <Mic size={20} />}
+                    </button>
+                    <button type="submit" className="btn btn-primary send-btn" disabled={!inputText.trim() && !isListening}>
                         <Send size={20} />
                     </button>
                 </form>
