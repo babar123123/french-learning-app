@@ -1,18 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, User, Bot, Sparkles, AlertCircle } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { useLanguage } from '../context/LanguageContext';
 import './Chat.css';
 
-const INITIAL_MESSAGE = {
-    id: 1,
-    sender: 'ai',
-    text: "Bonjour! Kaise hain aap? I'm Lumière. I can help you learn French using English or Roman Urdu. Aap kya seekhna chahte hain aaj?"
-};
-
 const Chat = () => {
+    const { targetLanguage } = useLanguage();
+
+    const INITIAL_MESSAGE = {
+        id: 1,
+        sender: 'ai',
+        text: targetLanguage === 'French'
+            ? "Bonjour! Kaise hain aap? I'm Lumière. I can help you learn French. Aap kya seekhna chahte hain aaj?"
+            : targetLanguage === 'Spanish'
+                ? "¡Hola! ¿Cómo estás? I'm Lumière. I can help you learn Spanish. Aap kya seekhna chahte hain aaj?"
+                : "Hallo! Wie geht es dir? I'm Lumière. I can help you learn German. Aap kya seekhna chahte hain aaj?"
+    };
+
     const [messages, setMessages] = useState([INITIAL_MESSAGE]);
     const [inputText, setInputText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+
+    // Reset chat when language changes
+    useEffect(() => {
+        setMessages([INITIAL_MESSAGE]);
+    }, [targetLanguage]);
+
     const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || 'AIzaSyAQmraYDNqo0R4-zTQKxRei0s4g4tp03_g');
     const [showKeyInput, setShowKeyInput] = useState(false);
     const messagesEndRef = useRef(null);
@@ -61,7 +74,7 @@ const Chat = () => {
                 },
                 systemInstruction: {
                     role: "system",
-                    parts: [{ text: "You are Lumière, a friendly and energetic French tutor who is an expert in Roman Urdu, English, and French. \n\nYOUR MISSION:\nTeach French to the user by chatting with them in Roman Urdu and English.\n\nCOMMUNICATION RULES:\n1. NEVER give one-word or very short responses. Always be conversational and helpful.\n2. Respond in the language used by the user (Roman Urdu/English). Mix them naturally.\n3. When the user wants to learn something in French, use this exact format:\n   - **French:** [French Phrase]\n   - **Matlab:** [Meaning in Roman Urdu/English]\n   - **Pronunciation:** [How to say it]\n4. Be extremely encouraging. Use phrases like 'Zabardast!', 'Bohat achay!', 'C'est super!', 'Sahi jawab!'.\n5. If the user makes a mistake, correct them gently in Roman Urdu and explain why." }]
+                    parts: [{ text: `You are Lumière, a friendly and energetic ${targetLanguage} tutor who is an expert in Roman Urdu, English, and ${targetLanguage}. \n\nYOUR MISSION:\nTeach ${targetLanguage} to the user by chatting with them in Roman Urdu and English.\n\nCOMMUNICATION RULES:\n1. NEVER give one-word or very short responses. Always be conversational and helpful.\n2. Respond in the language used by the user (Roman Urdu/English). Mix them naturally.\n3. When the user wants to learn something in ${targetLanguage}, use this exact format:\n   - **${targetLanguage}:** [${targetLanguage} Phrase]\n   - **Matlab:** [Meaning in Roman Urdu/English]\n   - **Pronunciation:** [How to say it]\n4. Be extremely encouraging. Use phrases like 'Zabardast!', 'Bohat achay!', '¡Excelente!', 'Wunderbar!', 'Sahi jawab!'.\n5. If the user makes a mistake, correct them gently in Roman Urdu and explain why.` }]
                 }
             });
 

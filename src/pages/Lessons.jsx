@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { lessonsData } from '../data/lessons';
 import { Play, Star, Clock, X, Volume2, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
+import { useLanguage } from '../context/LanguageContext';
 import './Lessons.css';
 
 const Lessons = () => {
@@ -10,6 +11,7 @@ const Lessons = () => {
     const [isFlipped, setIsFlipped] = useState(false);
     const [activeTab, setActiveTab] = useState('Beginner'); // Category toggle
     const { playBlip, playCardSound } = useSound();
+    const { targetLanguage } = useLanguage();
 
     const openLesson = (lesson) => {
         playCardSound();
@@ -54,14 +56,13 @@ const Lessons = () => {
         window.speechSynthesis.cancel();
 
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'fr-FR';
+        const langMap = { 'French': 'fr-FR', 'Spanish': 'es-ES', 'German': 'de-DE' };
+        utterance.lang = langMap[targetLanguage] || 'fr-FR';
         utterance.rate = 0.8;
 
-        // Try to find a French voice specifically
-        const frenchVoice = getFrenchVoice();
-        if (frenchVoice) {
-            utterance.voice = frenchVoice;
-        }
+        const voices = window.speechSynthesis.getVoices();
+        const voice = voices.find(v => v.lang.startsWith(utterance.lang.split('-')[0]));
+        if (voice) utterance.voice = voice;
 
         // Force volume
         utterance.volume = 1.0;
@@ -120,8 +121,8 @@ const Lessons = () => {
                                 <span className="meta-item"><Clock size={14} /> 10 min</span>
                                 <span className="meta-item"><Star size={14} /> +50 XP</span>
                             </div>
-                            <h3>{lesson.title}</h3>
-                            <p>{lesson.subtitle}</p>
+                            <h3>{lesson[targetLanguage.toLowerCase() + 'Title'] || lesson.title}</h3>
+                            <p>{lesson[targetLanguage.toLowerCase() + 'Subtitle'] || lesson.subtitle}</p>
 
                             <div className="progress-bar-bg">
                                 <div className="progress-bar-fill" style={{ width: '0%' }}></div>
@@ -140,7 +141,7 @@ const Lessons = () => {
                         </button>
 
                         <div className="modal-header">
-                            <h2>{activeLesson.title}</h2>
+                            <h2>{activeLesson[targetLanguage.toLowerCase() + 'Title'] || activeLesson.title}</h2>
                             <div className="progress-indicator">
                                 {currentSlide + 1} / {activeLesson.content.length}
                             </div>
@@ -160,15 +161,17 @@ const Lessons = () => {
                                 onClick={() => { setIsFlipped(!isFlipped); playCardSound(); }}
                             >
                                 <div className="card-face front">
-                                    <span className="sc-label">French</span>
-                                    <div className="sc-content">{activeLesson.content[currentSlide].french}</div>
+                                    <span className="sc-label">{targetLanguage}</span>
+                                    <div className="sc-content">
+                                        {activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french}
+                                    </div>
                                     <div
                                         className="sc-pronunciation"
-                                        onClick={(e) => playAudio(e, activeLesson.content[currentSlide].french)}
+                                        onClick={(e) => playAudio(e, activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french)}
                                         style={{ cursor: 'pointer' }}
                                     >
                                         <Volume2 size={16} />
-                                        {activeLesson.content[currentSlide].pronunciation}
+                                        {activeLesson.content[currentSlide][targetLanguage.toLowerCase().substring(0, 3) + 'Pronunciation'] || activeLesson.content[currentSlide].pronunciation}
                                     </div>
                                 </div>
                                 <div className="card-face back">

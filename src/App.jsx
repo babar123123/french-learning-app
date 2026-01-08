@@ -6,25 +6,28 @@ import Home from './pages/Home';
 import Chat from './pages/Chat';
 import Lessons from './pages/Lessons';
 import { SoundProvider } from './context/SoundContext';
+import { LanguageProvider } from './context/LanguageContext';
 import './App.css';
 
 function App() {
   return (
-    <SoundProvider>
-      <Router>
-        <div className="app-wrapper">
-          <Header />
-          <main>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/lessons" element={<Lessons />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </SoundProvider>
+    <LanguageProvider>
+      <SoundProvider>
+        <Router>
+          <div className="app-wrapper">
+            <Header />
+            <main>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/lessons" element={<Lessons />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </Router>
+      </SoundProvider>
+    </LanguageProvider>
   );
 }
 

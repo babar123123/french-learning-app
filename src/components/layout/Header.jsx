@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { MessageSquare, BookOpen, Crown, Menu, X, Volume2, VolumeX } from 'lucide-react';
+import { MessageSquare, BookOpen, Crown, Menu, X, Volume2, VolumeX, Languages, ChevronRight } from 'lucide-react';
 import { useSound } from '../../context/SoundContext';
+import { useLanguage } from '../../context/LanguageContext';
 import './Layout.css';
 
 const Header = () => {
@@ -9,6 +10,8 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { isMuted, toggleMute, playBlip, playTap, playSuccess } = useSound();
+  const { targetLanguage, setTargetLanguage } = useLanguage();
+  const [isLangOpen, setIsLangOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,11 +21,23 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isLangOpen && !event.target.closest('.language-selector-wrapper')) {
+        setIsLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isLangOpen]);
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Curriculum', path: '/lessons', icon: <BookOpen size={18} /> },
     { name: 'AI Tutor', path: '/chat', icon: <MessageSquare size={18} /> },
   ];
+
+  const languages = ['French', 'Spanish', 'German'];
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
@@ -45,6 +60,29 @@ const Header = () => {
               {link.name}
             </Link>
           ))}
+
+          <div className={`language-selector-wrapper ${isLangOpen ? 'open' : ''}`} onClick={() => setIsLangOpen(!isLangOpen)}>
+            <Languages size={18} className="lang-icon" />
+            <span className="current-lang">{targetLanguage}</span>
+            <ChevronRight size={14} className={`chevron-icon ${isLangOpen ? 'rotate' : ''}`} />
+
+            {isLangOpen && (
+              <div className="lang-dropdown glass-panel">
+                {languages.map((lang) => (
+                  <div
+                    key={lang}
+                    className={`lang-option ${targetLanguage === lang ? 'active' : ''}`}
+                    onClick={() => {
+                      setTargetLanguage(lang);
+                      playBlip();
+                    }}
+                  >
+                    {lang}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           <button
             className="sound-toggle-btn"
