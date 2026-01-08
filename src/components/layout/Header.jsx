@@ -138,6 +138,7 @@ const Header = () => {
                           setTargetLanguage(lang);
                           playBlip();
                           setIsLangOpen(false);
+                          setIsMobileMenuOpen(false);
                         }}
                       >
                         {lang}
