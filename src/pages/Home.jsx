@@ -34,6 +34,15 @@ const Home = () => {
         }
     }[targetLanguage];
 
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userName = user.name?.split(' ')[0] || 'Explorer';
+
+    const greetings = {
+        French: 'Bonjour',
+        Spanish: '¡Hola',
+        German: 'Hallo'
+    };
+
     return (
         <div className="home-page">
             {/* Hero Section */}
@@ -42,8 +51,8 @@ const Home = () => {
                     <div className="hero-content animate-fade-in">
                         <div className="badge catch-phrase">✨ AI-Powered {targetLanguage} Tutor</div>
                         <h1 className="hero-title">
-                            {content.title} <br />
-                            <span className="text-gradient">With Intelligence</span>
+                            {greetings[targetLanguage] || 'Hello'}, {userName}! 👋 <br />
+                            {content.title}
                         </h1>
                         <p className="hero-subtitle">
                             Immerse yourself in {targetLanguage} with Lumière.

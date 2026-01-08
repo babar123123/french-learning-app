@@ -100,6 +100,7 @@ const Header = () => {
             className="btn btn-primary ml-4"
             onClick={() => {
               localStorage.removeItem('isAuthenticated');
+              localStorage.removeItem('onboarding_complete'); // Reset onboarding
               window.location.reload();
             }}
           >
@@ -173,6 +174,7 @@ const Header = () => {
                   className="btn btn-primary"
                   onClick={() => {
                     localStorage.removeItem('isAuthenticated');
+                    localStorage.removeItem('onboarding_complete');
                     window.location.reload();
                   }}
                   style={{ width: '100%', marginTop: '16px', padding: '14px' }}

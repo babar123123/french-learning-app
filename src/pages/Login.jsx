@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Crown, Mail, Lock, User, ArrowRight, Github } from 'lucide-react';
+import { Crown, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
 import './Login.css';
 
@@ -169,17 +169,7 @@ const Login = () => {
                     {/* The OFFICIAL Google Button Container */}
                     <div ref={googleButtonRef} className="official-google-container"></div>
 
-                    <button
-                        className="social-btn glass hover-glow github-fix"
-                        onClick={() => {
-                            localStorage.setItem('isAuthenticated', 'true');
-                            localStorage.setItem('user', JSON.stringify({ name: 'Github User', email: 'github@user.com' }));
-                            playSuccess();
-                            navigate('/');
-                        }}
-                    >
-                        <Github size={18} /> Continue with Github
-                    </button>
+
                 </div>
 
                 <div className="login-footer">
