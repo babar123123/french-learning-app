@@ -11,10 +11,12 @@ const Chat = () => {
         id: 1,
         sender: 'ai',
         text: targetLanguage === 'French'
-            ? "Bonjour! I'm Lumière, your French tutor. I can help you learn French using English and Roman Urdu. What would you like to learn today?"
+            ? "Bonjour! I'm Lumière, your French tutor. I'm here to practice French with you. Ready?"
             : targetLanguage === 'Spanish'
-                ? "¡Hola! I'm Lumière, your Spanish tutor. I can help you learn Spanish using English and Roman Urdu. What would you like to learn today?"
-                : "Hallo! I'm Lumière, your German tutor. I can help you learn German using English and Roman Urdu. What would you like to learn today?"
+                ? "¡Hola! I'm Lumière, your Spanish tutor. I'm here to practice Spanish with you. Ready?"
+                : "Hallo! I'm Lumière, your German tutor. I'm here to practice German with you. Ready?",
+        translation: "Bonjour! Main Lumière hoon, aapki tutor. Main yahan aapke saath practice karne ke liye hoon. Tayyar hain?",
+        showTranslation: false
     };
 
     const [messages, setMessages] = useState([INITIAL_MESSAGE]);
@@ -187,11 +189,20 @@ const Chat = () => {
             const genAI = new GoogleGenerativeAI(apiKey);
             const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
-            const chat = model.startChat({
-                history: history.map(msg => ({
+            // Process history to ensure it strictly starts with a 'user' message
+            const processedHistory = history
+                .map(msg => ({
                     role: msg.sender === 'ai' ? 'model' : 'user',
                     parts: [{ text: msg.text }],
-                })).filter(msg => msg.role !== 'model' || msg.parts[0].text !== INITIAL_MESSAGE.text),
+                }))
+                .filter(msg => msg.parts[0].text !== INITIAL_MESSAGE.text);
+
+            // Gemini REQUIRES history to start with 'user' role.
+            const firstUserIndex = processedHistory.findIndex(m => m.role === 'user');
+            const validHistory = firstUserIndex !== -1 ? processedHistory.slice(firstUserIndex) : [];
+
+            const chat = model.startChat({
+                history: validHistory,
                 generationConfig: {
                     maxOutputTokens: 1000,
                     temperature: 0.7,
@@ -221,12 +232,20 @@ RULES:
             const text = response.text();
 
             try {
-                // Ensure text is trimmed of any accidental backticks or markdown
-                const cleanJson = text.replace(/```json|```/g, '').trim();
-                return JSON.parse(cleanJson);
+                // Robust JSON extraction: Find the first { and last }
+                const start = text.indexOf('{');
+                const end = text.lastIndexOf('}');
+
+                if (start !== -1 && end !== -1) {
+                    const jsonPart = text.substring(start, end + 1);
+                    return JSON.parse(jsonPart);
+                }
+
+                // Fallback for non-JSON or partial response
+                return { text: text, translation: "Translation unavailable for this specific response." };
             } catch (e) {
-                console.error("Parse Error:", e);
-                return { text: text, translation: "Format error. Use the 'Translate' icon to see if possible." };
+                console.error("JSON Extraction Error:", e);
+                return { text: text, translation: "Format error. Try again." };
             }
         } catch (error) {
             console.error("API Error detailed:", error);
@@ -411,9 +430,8 @@ RULES:
                                         </button>
                                         <button
                                             className="speak-msg-btn translate-btn"
-                                            onClick={() => toggleTranslation(msg.id)}
-                                            onTouchEnd={(e) => {
-                                                e.preventDefault();
+                                            onClick={(e) => {
+                                                e.stopPropagation();
                                                 toggleTranslation(msg.id);
                                             }}
                                         >
