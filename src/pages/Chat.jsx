@@ -17,7 +17,8 @@ const Chat = () => {
                 : "Hallo! I'm Lumière, your German tutor. I'm here to practice German with you. Ready?",
         translation_en: "Hello! I'm Lumière, your tutor. I'm here to practice with you. Ready?",
         translation_ur: "Asalam-o-alaikum! Main Lumière hoon, aapki tutor. Main yahan aapke saath practice karne ke liye hoon. Tayyar hain?",
-        showTranslation: null // can be 'en', 'ur' or null
+        showTranslation: null,
+        showMenu: false
     };
 
     const [messages, setMessages] = useState([INITIAL_MESSAGE]);
@@ -303,7 +304,8 @@ RULES:
                 text: typeof responseData === 'object' ? responseData.text : responseData,
                 translation_en: responseData.translation_en || null,
                 translation_ur: responseData.translation_ur || null,
-                showTranslation: null
+                showTranslation: null,
+                showMenu: false
             };
 
             setMessages(prev => [...prev, aiMsg]);
@@ -324,6 +326,12 @@ RULES:
     const setTranslationLang = (id, lang) => {
         setMessages(prev => prev.map(msg =>
             msg.id === id ? { ...msg, showTranslation: msg.showTranslation === lang ? null : lang } : msg
+        ));
+    };
+
+    const toggleTransMenu = (id) => {
+        setMessages(prev => prev.map(msg =>
+            msg.id === id ? { ...msg, showMenu: !msg.showMenu } : msg
         ));
     };
 
@@ -441,19 +449,30 @@ RULES:
                                             <Volume2 size={14} /> Listen
                                         </button>
 
-                                        <div className="translation-options">
+                                        <div className="translation-wrapper">
                                             <button
-                                                className={`speak-msg-btn trans-opt ${msg.showTranslation === 'en' ? 'active' : ''}`}
-                                                onClick={() => setTranslationLang(msg.id, 'en')}
+                                                className={`speak-msg-btn translate-btn ${msg.showMenu ? 'active' : ''}`}
+                                                onClick={() => toggleTransMenu(msg.id)}
                                             >
-                                                English
+                                                <Languages size={14} /> Translate
                                             </button>
-                                            <button
-                                                className={`speak-msg-btn trans-opt ${msg.showTranslation === 'ur' ? 'active' : ''}`}
-                                                onClick={() => setTranslationLang(msg.id, 'ur')}
-                                            >
-                                                Urdu
-                                            </button>
+
+                                            {msg.showMenu && (
+                                                <div className="translation-options slide-in">
+                                                    <button
+                                                        className={`speak-msg-btn trans-opt ${msg.showTranslation === 'en' ? 'active' : ''}`}
+                                                        onClick={() => setTranslationLang(msg.id, 'en')}
+                                                    >
+                                                        English
+                                                    </button>
+                                                    <button
+                                                        className={`speak-msg-btn trans-opt ${msg.showTranslation === 'ur' ? 'active' : ''}`}
+                                                        onClick={() => setTranslationLang(msg.id, 'ur')}
+                                                    >
+                                                        Urdu
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
                                         {isSpeaking && (
                                             <button className="speak-msg-btn mute-btn" onClick={stopSpeak}>
