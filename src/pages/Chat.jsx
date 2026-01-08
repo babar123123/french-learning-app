@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, User, Bot, Sparkles, AlertCircle, Mic, MicOff, Volume2, Settings, VolumeX } from 'lucide-react';
+import { Send, User, Bot, Sparkles, AlertCircle, Mic, MicOff, Volume2, Settings, VolumeX, HelpCircle, X, ExternalLink, Eye, EyeOff } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useLanguage } from '../context/LanguageContext';
 import './Chat.css';
@@ -11,10 +11,10 @@ const Chat = () => {
         id: 1,
         sender: 'ai',
         text: targetLanguage === 'French'
-            ? "Bonjour! Kaise hain aap? I'm Lumière. I can help you learn French. Aap kya seekhna chahte hain aaj?"
+            ? "Bonjour! I'm Lumière, your French tutor. I can help you learn French using English and Roman Urdu. What would you like to learn today?"
             : targetLanguage === 'Spanish'
-                ? "¡Hola! ¿Cómo estás? I'm Lumière. I can help you learn Spanish. Aap kya seekhna chahte hain aaj?"
-                : "Hallo! Wie geht es dir? I'm Lumière. I can help you learn German. Aap kya seekhna chahte hain aaj?"
+                ? "¡Hola! I'm Lumière, your Spanish tutor. I can help you learn Spanish using English and Roman Urdu. What would you like to learn today?"
+                : "Hallo! I'm Lumière, your German tutor. I can help you learn German using English and Roman Urdu. What would you like to learn today?"
     };
 
     const [messages, setMessages] = useState([INITIAL_MESSAGE]);
@@ -32,6 +32,8 @@ const Chat = () => {
 
     const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
     const [showKeyInput, setShowKeyInput] = useState(!localStorage.getItem('gemini_api_key'));
+    const [showHelp, setShowHelp] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [isListening, setIsListening] = useState(false);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const messagesEndRef = useRef(null);
@@ -142,7 +144,7 @@ const Chat = () => {
 
         try {
             const genAI = new GoogleGenerativeAI(apiKey);
-            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+            const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
             const chat = model.startChat({
                 history: history.map(msg => ({
@@ -150,12 +152,27 @@ const Chat = () => {
                     parts: [{ text: msg.text }],
                 })).filter(msg => msg.role !== 'model' || msg.parts[0].text !== INITIAL_MESSAGE.text),
                 generationConfig: {
-                    maxOutputTokens: 500,
+                    maxOutputTokens: 1000,
                     temperature: 0.7,
                 },
                 systemInstruction: {
                     role: "system",
-                    parts: [{ text: `You are Lumière, a friendly and energetic ${targetLanguage} tutor who is an expert in Roman Urdu, English, and ${targetLanguage}. \n\nYOUR MISSION:\nTeach ${targetLanguage} to the user by chatting with them in Roman Urdu and English.\n\nCOMMUNICATION RULES:\n1. NEVER give one-word or very short responses. Always be conversational and helpful.\n2. Respond in the language used by the user (Roman Urdu/English). Mix them naturally.\n3. When the user wants to learn something in ${targetLanguage}, use this exact format:\n   - **${targetLanguage}:** [${targetLanguage} Phrase]\n   - **Matlab:** [Meaning in Roman Urdu/English]\n   - **Pronunciation:** [How to say it]\n4. Be extremely encouraging. Use phrases like 'Zabardast!', 'Bohat achay!', '¡Excelente!', 'Wunderbar!', 'Sahi jawab!'.\n5. If the user makes a mistake, correct them gently in Roman Urdu and explain why.` }]
+                    parts: [{
+                        text: `You are Lumière, a friendly and energetic ${targetLanguage} tutor. You are an expert in Roman Urdu, English, and ${targetLanguage}.
+
+YOUR MISSION:
+Explain ${targetLanguage} words and concepts using a natural mix of English and Roman Urdu.
+
+COMMUNICATION RULES:
+1. Stay conversational but focused. After a friendly greeting, get straight to the point.
+2. Mix English and Roman Urdu naturally (Latin script).
+3. When teaching a word or phrase, ALWAYS use this EXACT format with a NEW LINE for each item:
+   **${targetLanguage}:** [Word]
+   **Matlab/Meaning:** [English/Roman Urdu Meaning]
+   **Pronunciation:** [Easy to read guide]
+4. ALWAYS provide the translation for any specific word the user asks about or any greeting.
+5. Be encouraging: 'Zabardast!', 'Excellent!', 'Bohat khoob!'.
+6. Do not let responses cut off. Keep them concise but complete.` }]
                 }
             });
 
@@ -250,17 +267,59 @@ const Chat = () => {
                         <div className="api-content">
                             <AlertCircle size={20} className="text-accent" />
                             <p>To enable real intelligence, enter your Gemini API Key.</p>
+                            <button className="help-btn" onClick={() => setShowHelp(true)}>
+                                <HelpCircle size={16} /> How to get a key?
+                            </button>
                         </div>
                         <div className="api-input-group">
-                            <input
-                                type="password"
-                                placeholder="Paste API Key here..."
-                                className="key-input"
-                                onBlur={(e) => saveKey(e.target.value)}
-                                defaultValue={apiKey}
-                            />
+                            <div className="password-wrapper">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Paste API Key here..."
+                                    className="key-input"
+                                    value={apiKey}
+                                    onChange={(e) => setApiKey(e.target.value)}
+                                />
+                                <button
+                                    className="password-toggle"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    type="button"
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
+                            </div>
+                            <button className="btn btn-primary btn-sm" onClick={() => saveKey(apiKey)}>
+                                Save Key
+                            </button>
                         </div>
                     </div>
+                )}
+
+                {showHelp && (
+                    <>
+                        <div className="modal-overlay" onClick={() => setShowHelp(false)}></div>
+                        <div className="api-help-modal glass-panel">
+                            <div className="help-header">
+                                <h3><Sparkles size={18} /> How to get your API Key</h3>
+                                <button className="close-help" onClick={() => setShowHelp(false)}><X size={20} /></button>
+                            </div>
+                            <div className="help-steps">
+                                <div className="step">
+                                    <span className="step-num">1</span>
+                                    <p>Go to <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer">Google AI Studio <ExternalLink size={12} /></a></p>
+                                </div>
+                                <div className="step">
+                                    <span className="step-num">2</span>
+                                    <p>Click on <strong>"Create API key"</strong> button.</p>
+                                </div>
+                                <div className="step">
+                                    <span className="step-num">3</span>
+                                    <p>Copy the generated key and paste it here.</p>
+                                </div>
+                            </div>
+                            <p className="help-note">Note: Gemini API is free for students and developers (within limits).</p>
+                        </div>
+                    </>
                 )}
 
                 <div className="chat-messages">

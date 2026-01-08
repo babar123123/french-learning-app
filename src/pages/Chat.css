@@ -372,16 +372,180 @@
     color: var(--text-primary);
 }
 
+.api-input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+}
+
+.password-toggle:hover {
+    color: white;
+}
+
 .key-input {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 8px 16px;
+    padding: 8px 40px 8px 16px;
     border-radius: 8px;
     color: white;
     font-family: monospace;
-    width: 200px;
+    width: 250px;
     outline: none;
     transition: all 0.2s;
+}
+
+.key-input:focus {
+    border-color: var(--primary);
+    width: 250px;
+}
+
+.help-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.help-btn:hover {
+    color: white;
+}
+
+.api-help-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    z-index: 2000;
+    padding: 32px;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--primary-glow);
+    border-radius: 24px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 100px rgba(99, 102, 241, 0.1);
+    animation: modalAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    z-index: 1500;
+}
+
+.help-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.help-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+}
+
+.close-help {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.help-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.step {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.step-num {
+    width: 28px;
+    height: 28px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.step a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.help-note {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .key-input:focus {
