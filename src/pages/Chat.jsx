@@ -102,7 +102,7 @@ const Chat = () => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
 
-        // Optimized delay for faster mobile response
+        // Stable 100ms delay for mobile audio engines
         setTimeout(() => {
             const cleanText = text.replace(/[*#_\[\]]/g, '').trim();
             if (!cleanText) return;
@@ -111,25 +111,25 @@ const Chat = () => {
             const targetLangCode = langCodes[targetLanguage] || 'en-US';
 
             const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.lang = targetLangCode;
 
-            const availableVoices = window.speechSynthesis.getVoices();
+            // Re-fetch voices directly from the API
+            const allVoices = window.speechSynthesis.getVoices();
 
-            // Search for French accent specifically (Thomas, Audrey are standard high-quality voices)
-            const preferredVoice = availableVoices.find(v =>
+            // High-quality French accent filter
+            const selectedVoice = allVoices.find(v =>
                 v.lang.toLowerCase().startsWith('fr') &&
-                (v.name.includes('Google') || v.name.includes('France') || v.name.includes('Thomas') || v.name.includes('Audrey'))
-            ) || availableVoices.find(v =>
-                v.lang.toLowerCase().startsWith('fr')
-            );
+                (v.name.includes('Google') || v.name.includes('France') || v.name.includes('Premium'))
+            ) || allVoices.find(v => v.lang.toLowerCase().startsWith('fr'));
 
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
-                utterance.lang = preferredVoice.lang;
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                utterance.lang = selectedVoice.lang;
+            } else {
+                utterance.lang = targetLangCode;
             }
 
-            // Natural Professional Settings
-            utterance.rate = 0.92;
+            // Universal settings for clarity
+            utterance.rate = 0.88;
             utterance.pitch = 1.0;
 
             utterance.onstart = () => setIsSpeaking(true);
@@ -137,7 +137,7 @@ const Chat = () => {
             utterance.onerror = () => setIsSpeaking(false);
 
             window.speechSynthesis.speak(utterance);
-        }, 50);
+        }, 100);
     };
 
     const stopSpeak = () => {
