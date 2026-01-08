@@ -11,9 +11,28 @@
 .path-header {
     text-align: center;
     margin-bottom: 80px;
-    position: sticky;
-    top: 120px;
-    z-index: 100;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 40px;
+    border-radius: 32px;
+    border: var(--glass-border);
+    position: relative;
+    z-index: 5;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.streak-pill {
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #fb923c;
+    border: 1px solid rgba(251, 146, 60, 0.3);
 }
 
 .path-header h1 {
@@ -25,8 +44,54 @@
 
 .stats-pills {
     display: flex;
+    gap: 16px;
+    /* Changed from 15px */
     justify-content: center;
-    gap: 15px;
+    margin-bottom: 32px;
+    /* Added */
+}
+
+.achievements-row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 10px 5px;
+    scrollbar-width: none;
+}
+
+.badge-item {
+    flex: 0 0 160px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    text-align: left;
+    transition: all 0.3s ease;
+    filter: grayscale(1);
+    opacity: 0.5;
+}
+
+.badge-item.unlocked {
+    filter: grayscale(0);
+    opacity: 1;
+    background: rgba(99, 102, 241, 0.1);
+    border-color: var(--primary-glow);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.badge-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.badge-info h5 {
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.badge-info span {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
 }
 
 .pill {
@@ -44,10 +109,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    gap: 60px;
     width: 100%;
     max-width: 400px;
-    padding: 40px;
+    padding: 40px 0 100px;
+    position: relative;
+    z-index: 1;
 }
 
 .path-node-wrapper {
@@ -204,6 +271,121 @@
 
 .path-footer-buttons {
     margin-top: 50px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.pill-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 40px;
+    border: var(--glass-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pill-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Celebration Modal */
+.celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.celebration-modal {
+    width: 100%;
+    max-width: 440px;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    border: 2px solid var(--primary-glow);
+    box-shadow: 0 0 50px rgba(99, 102, 241, 0.3);
+}
+
+.badge-ring {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    animation: bounce 2s infinite ease-in-out;
+}
+
+.big-icon {
+    font-size: 4rem;
+}
+
+.celebration-title {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.badge-name {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+    font-weight: 800;
+}
+
+.badge-desc {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 32px;
+    line-height: 1.5;
+}
+
+.continue-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-10px) scale(1.05);
+    }
+}
+
+@media (max-width: 480px) {
+    .header-top {
+        flex-direction: column;
+        gap: 16px;
+    }
 }
 
 @media (max-width: 768px) {

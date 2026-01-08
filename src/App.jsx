@@ -11,12 +11,16 @@ import { SoundProvider } from './context/SoundContext';
 import { LanguageProvider } from './context/LanguageContext';
 import './App.css';
 
+import Onboarding from './components/features/Onboarding';
+import Grammar from './pages/Grammar';
+
 function App() {
   return (
     <LanguageProvider>
       <SoundProvider>
         <Router>
           <div className="app-wrapper">
+            <Onboarding />
             <Header />
             <main>
               <Routes>
@@ -24,6 +28,7 @@ function App() {
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/lessons" element={<Lessons />} />
                 <Route path="/level-path" element={<LevelPath />} />
+                <Route path="/grammar" element={<Grammar />} />
                 <Route path="/game" element={<Game />} />
               </Routes>
             </main>
