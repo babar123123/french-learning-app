@@ -293,48 +293,60 @@
 }
 
 .message-translation {
-    margin-top: 12px;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-    border-left: 2px solid var(--primary);
+    margin-top: 14px;
+    padding: 14px;
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-left: 3px solid var(--primary);
     color: var(--text-secondary);
     font-size: 0.95rem;
-    line-height: 1.5;
+    line-height: 1.6;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .translation-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     position: relative;
+    margin-top: 4px;
 }
 
 .translate-btn {
     color: var(--primary) !important;
-    background: rgba(236, 72, 153, 0.05) !important;
-    border: 1px solid rgba(236, 72, 153, 0.1) !important;
+    background: rgba(99, 102, 241, 0.08) !important;
+    border: 1px solid rgba(99, 102, 241, 0.15) !important;
+    font-weight: 500 !important;
+}
+
+.translate-btn:hover {
+    background: rgba(99, 102, 241, 0.15) !important;
+    border-color: var(--primary) !important;
+    transform: translateY(-1px);
 }
 
 .translate-btn.active {
-    background: rgba(236, 72, 153, 0.15) !important;
+    background: var(--primary) !important;
+    color: white !important;
     border-color: var(--primary) !important;
 }
 
 .translation-options {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
 }
 
 .slide-in {
-    animation: slideRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: slideRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes slideRight {
     from {
         opacity: 0;
-        transform: translateX(-10px);
+        transform: translateX(-15px);
     }
 
     to {
@@ -344,25 +356,27 @@
 }
 
 .trans-opt {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    padding: 4px 12px !important;
-    border-radius: 12px !important;
-    font-size: 0.8rem !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 5px 14px !important;
+    border-radius: 20px !important;
+    font-size: 0.85rem !important;
     color: var(--text-secondary) !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.3s ease !important;
 }
 
 .trans-opt:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(99, 102, 241, 0.1) !important;
+    border-color: rgba(99, 102, 241, 0.3) !important;
     color: white !important;
+    transform: scale(1.05);
 }
 
 .trans-opt.active {
-    background: var(--primary) !important;
+    background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%) !important;
     color: white !important;
     border-color: var(--primary) !important;
-    box-shadow: 0 0 10px var(--primary-glow);
+    box-shadow: 0 4px 12px var(--primary-glow);
 }
 
 .animate-fade-in {
