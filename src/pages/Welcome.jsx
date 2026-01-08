@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, X } from 'lucide-react';
 import './Welcome.css';
 
 const Welcome = () => {
@@ -13,17 +13,10 @@ const Welcome = () => {
         setUser(savedUser);
 
         // Short delay for animation entry
-        const timer = setTimeout(() => setShowContent(true), 150);
+        const timer = setTimeout(() => setShowContent(true), 100);
 
-        // Auto-redirect disabled temporarily to fix disappearing issue
-        // const redirectTimer = setTimeout(() => {
-        //     navigate('/');
-        // }, 8000);
-
-        return () => {
-            clearTimeout(timer);
-            // clearTimeout(redirectTimer);
-        };
+        // Auto-redirect is disabled per previous request to keep it stable
+        return () => clearTimeout(timer);
     }, [navigate]);
 
     const handleContinue = () => {
@@ -31,37 +24,39 @@ const Welcome = () => {
     };
 
     return (
-        <div className="welcome-splash">
-            <div className="login-visual-bg">
-                <div className="gradient-sphere"></div>
-                <div className="gradient-sphere secondary"></div>
-            </div>
-
-            <div className={`welcome-card glass-panel ${showContent ? 'animate-zoom-in' : ''}`}>
-                <div className="welcome-icon-container">
-                    <div className="bot-avatar animate-float">
-                        <Bot size={50} color="white" />
-                        <div className="sparkle-effect">
-                            <Sparkles size={20} className="sparkle-1" />
-                            <Sparkles size={20} className="sparkle-2" />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="welcome-text">
-                    <h1 className="text-gradient">Bienvenue, {user?.name || 'Explorer'}!</h1>
-                    <p className="subtitle">Lumière is excited to guide you on your French quest.</p>
-
-                    <div className="welcome-quote">
-                        <p>"Ready to turn your curiosity into conversation?"</p>
-                    </div>
-                </div>
-
-                <button className="btn btn-primary welcome-btn" onClick={handleContinue}>
-                    Enter Quest <ArrowRight size={20} />
+        <div className="onboarding-overlay welcome-screen">
+            <div className={`onboarding-modal glass-panel ${showContent ? 'animate-fade-in' : ''}`}>
+                {/* Skip button top right like in the image */}
+                <button className="skip-btn" onClick={handleContinue}>
+                    Skip
                 </button>
 
-                <p className="auto-redirect-note">Redirecting to front page in a few seconds...</p>
+                <div className="step-content">
+                    {/* Centered Sparkle Icon */}
+                    <div className="icon-box" style={{ background: 'rgba(99, 102, 241, 0.15)' }}>
+                        <Sparkles size={48} color="white" />
+                    </div>
+
+                    {/* Personalized Title */}
+                    <h2>Bienvenue, {user?.name || 'Explorer'}!</h2>
+
+                    {/* App Description */}
+                    <p>Lumière is excited to guide you on your French quest. Ready to turn your curiosity into conversation?</p>
+                </div>
+
+                <div className="onboarding-footer">
+                    {/* Step dots like in the image */}
+                    <div className="dots">
+                        <div className="dot active"></div>
+                        <div className="dot"></div>
+                        <div className="dot"></div>
+                    </div>
+
+                    {/* Next button with arrow like in the image */}
+                    <button className="btn btn-primary next-btn welcome-next-btn" onClick={handleContinue}>
+                        Next <ArrowRight size={18} />
+                    </button>
+                </div>
             </div>
         </div>
     );
