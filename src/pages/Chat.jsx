@@ -194,7 +194,7 @@ const Chat = () => {
                         type="text"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder="Type your message in French..."
+                        placeholder={`Type your message in ${targetLanguage}...`}
                         className="chat-input"
                     />
                     <button type="submit" className="btn btn-primary send-btn" disabled={!inputText.trim()}>

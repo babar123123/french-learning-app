@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { lessonsData } from '../data/lessons';
-import { Trophy, RefreshCw, Star, Zap, Brain, ArrowRight, X, ChevronLeft, ChevronRight, Volume2, Play, Clock, CheckCircle2, XCircle, BookOpen, GraduationCap } from 'lucide-react';
+import { Trophy, RefreshCw, Star, Zap, Brain, ArrowRight, X, ChevronLeft, ChevronRight, Volume2, Play, Clock, CheckCircle2, XCircle, BookOpen, GraduationCap, Lock } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
 import { useLanguage } from '../context/LanguageContext';
 import confetti from 'canvas-confetti';
@@ -24,6 +24,12 @@ const Lessons = () => {
     const [currentQuizStep, setCurrentQuizStep] = useState(0);
     const [quizFeedback, setQuizFeedback] = useState(null); // 'correct' or 'wrong'
     const [score, setScore] = useState(0);
+    const [unlockedLevel, setUnlockedLevel] = useState(1);
+
+    useEffect(() => {
+        const savedLevel = parseInt(localStorage.getItem('unlockedLevel') || '1');
+        setUnlockedLevel(savedLevel);
+    }, []);
 
     useEffect(() => {
         if (location.state && location.state.openLessonId) {
@@ -66,7 +72,9 @@ const Lessons = () => {
         if (levelNumber) {
             const currentUnlocked = parseInt(localStorage.getItem('unlockedLevel') || '1');
             if (levelNumber >= currentUnlocked) {
-                localStorage.setItem('unlockedLevel', (levelNumber + 1).toString());
+                const nextLevel = levelNumber + 1;
+                localStorage.setItem('unlockedLevel', nextLevel.toString());
+                setUnlockedLevel(nextLevel);
             }
         }
     };
@@ -119,7 +127,7 @@ const Lessons = () => {
                 setCurrentQuizStep(curr => curr + 1);
             } else {
                 setShowQuiz(false);
-                handleFinish(location.state?.levelNumber);
+                handleFinish(location.state?.levelNumber || activeLesson.id);
             }
         }, 1500);
     };
@@ -133,6 +141,10 @@ const Lessons = () => {
     };
 
     const openLesson = (lesson) => {
+        if (lesson.id > unlockedLevel) {
+            playBlip();
+            return;
+        }
         playCardSound();
         setActiveLesson(lesson);
         setCurrentSlide(0);
@@ -244,28 +256,29 @@ const Lessons = () => {
 
             <div className="lessons-grid">
                 {filteredLessons.map((lesson, idx) => {
-                    // Map lesson topics to relevant image keywords
-                    const imageUrl = getLessonImage(lesson.title);
+                    const imageUrl = lesson.image || getLessonImage(lesson.title);
+                    const isLocked = lesson.id > unlockedLevel;
 
                     return (
                         <div
                             key={lesson.id}
-                            className="lesson-card glass-panel animate-fade-in"
+                            className={`lesson-card glass-panel animate-fade-in ${isLocked ? 'locked' : ''}`}
                             onClick={() => openLesson(lesson)}
                             style={{
                                 animationDelay: `${idx * 50}ms`,
-                                backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.85)), url(${imageUrl})`,
+                                backgroundImage: `linear-gradient(rgba(15, 23, 42, ${isLocked ? '0.85' : '0.6'}), rgba(15, 23, 42, ${isLocked ? '0.95' : '0.85'})), url(${imageUrl})`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center'
                             }}
                         >
-                            <div className="lesson-card-badge">Unit {idx + 1}</div>
+                            <div className="lesson-card-badge">Unit {lesson.id}</div>
+                            {isLocked && <div className="lock-overlay"><Lock size={40} /></div>}
                             <div className="lesson-card-content">
                                 <h3 className="lesson-card-title">{lesson[targetLanguage.toLowerCase() + 'Title'] || lesson.title}</h3>
-                                <p className="lesson-card-desc">{lesson.content?.length || lesson.dialogue?.length || 0} items</p>
+                                <p className="lesson-card-desc">{lesson.content?.length || 0} items</p>
                                 <div className="lesson-card-footer">
                                     <span className="lesson-level-badge">{lesson.level}</span>
-                                    <ArrowRight size={20} className="lesson-arrow" />
+                                    {isLocked ? <Lock size={18} className="lesson-lock" /> : <ArrowRight size={20} className="lesson-arrow" />}
                                 </div>
                             </div>
                         </div>

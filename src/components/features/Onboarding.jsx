@@ -16,7 +16,7 @@ const Onboarding = () => {
     const steps = [
         {
             title: "Welcome to Language Quest",
-            desc: "The ultimate journey to mastering French. Learn through games, dialogues, and AI practice.",
+            desc: "The ultimate journey to mastering a new language. Learn through games, dialogues, and AI practice.",
             icon: <Sparkles size={48} className="text-primary" />,
             color: "var(--primary)"
         },

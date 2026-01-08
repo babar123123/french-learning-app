@@ -153,7 +153,7 @@ export const lessonsData = [
         germanTitle: "Die Farben",
         subtitle: "A Vibrant Vocabulary",
         level: "Beginner",
-        image: "https://images.unsplash.com/photo-1500628539665-21799292857e?auto=format&fit=crop&q=80&w=800",
+        image: "https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=800",
         content: [
             { french: "Rouge", spanish: "Rojo", german: "Rot", english: "Red", pronunciation: "roozh" },
             { french: "Bleu", spanish: "Azul", german: "Blau", english: "Blue", pronunciation: "bluh" },
@@ -229,7 +229,7 @@ export const lessonsData = [
         germanTitle: "Das Wetter",
         subtitle: "Weather & Seasons",
         level: "Beginner",
-        image: "https://images.unsplash.com/photo-1514632595863-608589fa6153?auto=format&fit=crop&q=80&w=800",
+        image: "https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&q=80&w=800",
         content: [
             { french: "Il fait beau", spanish: "Hace buen tiempo", german: "Es ist schönes Wetter", english: "The weather is nice", pronunciation: "eel fay boh" },
             { french: "Il pleut", spanish: "Está lloviendo", german: "Es regnet", english: "It's raining", pronunciation: "eel pluh" },

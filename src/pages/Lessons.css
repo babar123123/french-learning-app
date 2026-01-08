@@ -73,6 +73,33 @@
     border-color: rgba(99, 102, 241, 0.3);
 }
 
+.lesson-card.locked {
+    filter: grayscale(0.6);
+    cursor: default;
+    opacity: 0.9;
+}
+
+.lesson-card.locked:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.lock-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    color: rgba(255, 255, 255, 0.4);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.lesson-lock {
+    opacity: 0.5;
+}
+
+
 .card-image-wrapper {
     position: relative;
     height: 200px;
@@ -661,6 +688,7 @@
 .finish-overlay .btn {
     transform: scale(1.2);
 }
+
 /* Completion Screen */
 .completion-screen {
     max-width: 500px;
@@ -692,8 +720,15 @@
 }
 
 @keyframes trophy-bounce {
-    0%, 100% { transform: translateY(0) rotate(0); }
-    50% { transform: translateY(-15px) rotate(5deg); }
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0);
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(5deg);
+    }
 }
 
 .completion-screen h2 {
@@ -738,8 +773,15 @@
 }
 
 @keyframes zoom-in {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Quiz Styles */
@@ -751,7 +793,7 @@
     background: rgba(15, 23, 42, 0.95);
     border-radius: 32px;
     position: relative;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -925,8 +967,15 @@
     flex-shrink: 0;
 }
 
-.lesson .mini-card-icon { color: var(--primary); background: rgba(99, 102, 241, 0.1); }
-.test .mini-card-icon { color: var(--accent); background: rgba(236, 72, 153, 0.1); }
+.lesson .mini-card-icon {
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.test .mini-card-icon {
+    color: var(--accent);
+    background: rgba(236, 72, 153, 0.1);
+}
 
 .mini-card-info {
     flex: 1;
@@ -957,7 +1006,7 @@
     .module-cards-row {
         grid-template-columns: 1fr;
     }
-    
+
     .module-main-title {
         font-size: 1.2rem;
     }
@@ -1101,4 +1150,3 @@
 .module-mini-card {
     display: none !important;
 }
-

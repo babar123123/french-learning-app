@@ -183,6 +183,14 @@ const Grammar = () => {
                         </button>
                     ))}
                 </div>
+
+                <div className="grammar-notice glass-panel animate-fade-in">
+                    <Info size={18} />
+                    <p>
+                        Exploring <strong>{targetLanguage}</strong>? These guides provide the essential pillars for your journey.
+                        {targetLanguage !== 'French' && " Note: Advanced tenses currently focus on core structures common to Romance/Germanic roots."}
+                    </p>
+                </div>
             </header>
 
             <div className="grammar-content">

@@ -164,3 +164,26 @@
         padding: 20px;
     }
 }
+
+.grammar-notice {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 100px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    border-left: 4px solid var(--primary);
+}
+
+.grammar-notice p {
+    margin: 0;
+}
+
+.grammar-notice strong {
+    color: var(--primary);
+}
