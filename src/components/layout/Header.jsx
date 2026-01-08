@@ -36,6 +36,7 @@ const Header = () => {
     { name: 'Curriculum', path: '/lessons', icon: <BookOpen size={18} /> },
     { name: 'Challenge', path: '/game', icon: <Trophy size={18} /> },
     { name: 'AI Tutor', path: '/chat', icon: <MessageSquare size={18} /> },
+    { name: 'Profile', path: '/profile', icon: <Crown size={18} /> },
   ];
 
   const languages = ['French', 'Spanish', 'German'];
@@ -95,7 +96,15 @@ const Header = () => {
             {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
           </button>
 
-          <button className="btn btn-primary ml-4" onClick={playSuccess}>Join Community</button>
+          <button
+            className="btn btn-primary ml-4"
+            onClick={() => {
+              localStorage.removeItem('isAuthenticated');
+              window.location.reload();
+            }}
+          >
+            Logout
+          </button>
         </nav>
 
         {/* Mobile Toggle */}

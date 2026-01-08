@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { lessonsData } from '../data/lessons';
-import { Trophy, RefreshCw, Star, Zap, Brain, ArrowRight, X, ChevronLeft, ChevronRight, Volume2, Play, Clock } from 'lucide-react';
+import { Trophy, RefreshCw, Star, Zap, Brain, ArrowRight, X, ChevronLeft, ChevronRight, Volume2, Play, Clock, CheckCircle2, XCircle, BookOpen, GraduationCap } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
 import { useLanguage } from '../context/LanguageContext';
 import confetti from 'canvas-confetti';
@@ -18,6 +18,11 @@ const Lessons = () => {
     const { targetLanguage } = useLanguage();
     const [isPlayingAll, setIsPlayingAll] = useState(false);
     const [showCompletion, setShowCompletion] = useState(false);
+    const [showQuiz, setShowQuiz] = useState(false);
+    const [quizQuestions, setQuizQuestions] = useState([]);
+    const [currentQuizStep, setCurrentQuizStep] = useState(0);
+    const [quizFeedback, setQuizFeedback] = useState(null); // 'correct' or 'wrong'
+    const [score, setScore] = useState(0);
 
     useEffect(() => {
         if (location.state && location.state.openLessonId) {
@@ -40,10 +45,9 @@ const Lessons = () => {
             colors: ['#6366f1', '#ec4899', '#10b981']
         });
 
-        // --- Streak Logic ---
         const today = new Date().toDateString();
         const lastDate = localStorage.getItem('lastActivityDate');
-        let currentStreak = parseInt(localStorage.getItem('streak') || '0');
+        let currentStreak = parseInt(localStorage.getItem('streak') || '1');
 
         if (lastDate !== today) {
             const yesterday = new Date();
@@ -57,7 +61,6 @@ const Lessons = () => {
             localStorage.setItem('streak', currentStreak.toString());
             localStorage.setItem('lastActivityDate', today);
         }
-        // ---------------------
 
         if (levelNumber) {
             const currentUnlocked = parseInt(localStorage.getItem('unlockedLevel') || '1');
@@ -65,6 +68,59 @@ const Lessons = () => {
                 localStorage.setItem('unlockedLevel', (levelNumber + 1).toString());
             }
         }
+    };
+
+    const generateQuiz = (lesson) => {
+        const content = lesson.content;
+        const shuffled = [...content].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 3); // 3 questions
+
+        const questions = selected.map(item => {
+            const correct = item[targetLanguage.toLowerCase()] || item.french;
+            const others = content
+                .filter(c => (c[targetLanguage.toLowerCase()] || c.french) !== correct)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 3)
+                .map(c => c[targetLanguage.toLowerCase()] || c.french);
+
+            const options = [...others, correct].sort(() => 0.5 - Math.random());
+
+            return {
+                question: item.english,
+                correct: correct,
+                options: options
+            };
+        });
+
+        setQuizQuestions(questions);
+        setCurrentQuizStep(0);
+        setScore(0);
+        setShowQuiz(true);
+    };
+
+    const handleQuizAnswer = (answer) => {
+        if (quizFeedback) return;
+
+        const isCorrect = answer === quizQuestions[currentQuizStep].correct;
+
+        if (isCorrect) {
+            setQuizFeedback('correct');
+            setScore(prev => prev + 1);
+            playSuccess();
+        } else {
+            setQuizFeedback('wrong');
+            playBlip();
+        }
+
+        setTimeout(() => {
+            setQuizFeedback(null);
+            if (currentQuizStep < quizQuestions.length - 1) {
+                setCurrentQuizStep(curr => curr + 1);
+            } else {
+                setShowQuiz(false);
+                handleFinish(location.state?.levelNumber);
+            }
+        }, 1500);
     };
 
     const handleProceed = () => {
@@ -80,6 +136,8 @@ const Lessons = () => {
         setActiveLesson(lesson);
         setCurrentSlide(0);
         setIsFlipped(false);
+        setShowQuiz(false);
+        setShowCompletion(false);
     };
 
     const closeLesson = () => {
@@ -177,50 +235,39 @@ const Lessons = () => {
                 <p className="page-subtitle">Structured modules to build your confidence step by step.</p>
 
                 <div className="category-tabs">
-                    <button
-                        className={`tab-btn ${activeTab === 'Beginner' ? 'active' : ''}`}
-                        onClick={() => { setActiveTab('Beginner'); playBlip(); }}
-                    >
-                        Beginner
-                    </button>
-                    <button
-                        className={`tab-btn ${activeTab === 'Intermediate' ? 'active' : ''}`}
-                        onClick={() => { setActiveTab('Intermediate'); playBlip(); }}
-                    >
-                        Intermediate
-                    </button>
-                    <button
-                        className={`tab-btn ${activeTab === 'Expert' ? 'active' : ''}`}
-                        onClick={() => { setActiveTab('Expert'); playBlip(); }}
-                    >
-                        Expert
-                    </button>
+                    <button className={`tab-btn ${activeTab === 'Beginner' ? 'active' : ''}`} onClick={() => { setActiveTab('Beginner'); playBlip(); }}>Beginner</button>
+                    <button className={`tab-btn ${activeTab === 'Intermediate' ? 'active' : ''}`} onClick={() => { setActiveTab('Intermediate'); playBlip(); }}>Intermediate</button>
+                    <button className={`tab-btn ${activeTab === 'Expert' ? 'active' : ''}`} onClick={() => { setActiveTab('Expert'); playBlip(); }}>Expert</button>
                 </div>
             </div>
 
-            <div className="lessons-grid">
-                {filteredLessons.map((lesson) => (
-                    <div key={lesson.id} className="lesson-card glass-panel" onClick={() => openLesson(lesson)}>
-                        <div className="card-image-wrapper">
-                            <img src={lesson.image} alt={lesson.title} className="card-image" />
-                            <div className="card-overlay">
-                                <button className="play-btn">
-                                    <Play size={24} fill="currentColor" />
-                                </button>
-                            </div>
-                            <span className="level-badge">{lesson.level}</span>
+            <div className="lessons-list">
+                {filteredLessons.map((lesson, idx) => (
+                    <div key={lesson.id} className="lesson-module-group animate-fade-in" style={{ animationDelay: `${idx * 100}ms` }}>
+                        <div className="module-title-row">
+                            <span className="module-number">Unit {idx + 1}</span>
+                            <h2 className="module-main-title">{lesson[targetLanguage.toLowerCase() + 'Title'] || lesson.title}</h2>
                         </div>
 
-                        <div className="card-content">
-                            <div className="card-meta">
-                                <span className="meta-item"><Clock size={14} /> 10 min</span>
-                                <span className="meta-item"><Star size={14} /> +50 XP</span>
+                        <div className="module-cards-row">
+                            {/* Study Card */}
+                            <div className="module-mini-card lesson glass-panel" onClick={() => openLesson(lesson)}>
+                                <div className="mini-card-icon"><BookOpen size={24} /></div>
+                                <div className="mini-card-info">
+                                    <h3>Study Lesson</h3>
+                                    <p>Learn new vocabulary & phrases</p>
+                                </div>
+                                <div className="mini-card-action"><ChevronRight size={20} /></div>
                             </div>
-                            <h3>{lesson[targetLanguage.toLowerCase() + 'Title'] || lesson.title}</h3>
-                            <p>{lesson[targetLanguage.toLowerCase() + 'Subtitle'] || lesson.subtitle}</p>
 
-                            <div className="progress-bar-bg">
-                                <div className="progress-bar-fill" style={{ width: '0%' }}></div>
+                            {/* Test Card */}
+                            <div className="module-mini-card test glass-panel" onClick={() => { openLesson(lesson); generateQuiz(lesson); }}>
+                                <div className="mini-card-icon"><GraduationCap size={24} /></div>
+                                <div className="mini-card-info">
+                                    <h3>Unit Test</h3>
+                                    <p>Prove your mastery to advance</p>
+                                </div>
+                                <div className="mini-card-action"><ChevronRight size={20} /></div>
                             </div>
                         </div>
                     </div>
@@ -235,44 +282,67 @@ const Lessons = () => {
                                 <Trophy size={80} className="trophy-icon" />
                             </div>
                             <h2 className="text-gradient">Félicitations !</h2>
-                            <p>You've mastered this lesson and unlocked the next challenge!</p>
-
+                            <p>You've mastered this unit and proved your skills!</p>
                             <div className="reward-stats">
-                                <div className="stat-pill">
-                                    <Star size={20} fill="var(--accent)" />
-                                    <span>+50 XP</span>
-                                </div>
-                                <div className="stat-pill">
-                                    <Zap size={20} fill="var(--success)" />
-                                    <span>Goal Met</span>
-                                </div>
+                                <div className="stat-pill"><Star size={20} fill="var(--accent)" /> <span>+50 XP</span></div>
+                                <div className="stat-pill"><Zap size={20} fill="var(--success)" /> <span>Goal Met</span></div>
                             </div>
-
                             <button className="btn btn-primary btn-glow" onClick={handleProceed}>
                                 {location.state?.from === 'level-path' ? 'Back to Journey' : 'Continue Learning'}
                                 <ArrowRight size={20} />
                             </button>
                         </div>
+                    ) : showQuiz ? (
+                        <div className="quiz-container glass-panel animate-fade-in">
+                            <button className="close-btn" onClick={() => setShowQuiz(false)}><X size={24} /></button>
+                            <div className="quiz-header">
+                                <span className="quiz-tag">Final Unit Test</span>
+                                <h2>{quizQuestions[currentQuizStep].question}</h2>
+                                <div className="quiz-progress">
+                                    Question {currentQuizStep + 1} of {quizQuestions.length}
+                                </div>
+                            </div>
+                            <div className="quiz-options">
+                                {quizQuestions[currentQuizStep].options.map((option, idx) => {
+                                    const isCorrect = option === quizQuestions[currentQuizStep].correct;
+                                    let btnClass = "";
+                                    if (quizFeedback) {
+                                        if (isCorrect) btnClass = "correct";
+                                        else if (option === quizFeedback) btnClass = "wrong";
+                                    }
+
+                                    return (
+                                        <button
+                                            key={idx}
+                                            className={`quiz-opt-btn ${btnClass}`}
+                                            onClick={() => handleQuizAnswer(option)}
+                                            disabled={!!quizFeedback}
+                                        >
+                                            {option}
+                                            {quizFeedback && isCorrect && <CheckCircle2 size={20} className="feedback-icon" />}
+                                            {quizFeedback && !isCorrect && option === quizFeedback && <XCircle size={20} className="feedback-icon" />}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            {quizFeedback && (
+                                <div className={`quiz-feedback-banner ${quizFeedback} animate-slide-up`}>
+                                    {quizFeedback === 'correct' ? 'Excellent! That is correct.' : 'Oops! Not quite right.'}
+                                </div>
+                            )}
+                        </div>
                     ) : (
                         <div className="lesson-modal glass-panel animate-fade-in">
-                            <button className="close-btn" onClick={closeLesson}>
-                                <X size={24} />
-                            </button>
-
+                            <button className="close-btn" onClick={closeLesson}><X size={24} /></button>
                             <div className="modal-header">
                                 <div className="header-main-info">
                                     <h2>{activeLesson[targetLanguage.toLowerCase() + 'Title'] || activeLesson.title}</h2>
-                                    <button
-                                        className={`btn-play-all ${isPlayingAll ? 'playing' : ''}`}
-                                        onClick={playFullLessonAudio}
-                                    >
+                                    <button className={`btn-play-all ${isPlayingAll ? 'playing' : ''}`} onClick={playFullLessonAudio}>
                                         {isPlayingAll ? <X size={16} /> : <Volume2 size={16} />}
                                         {isPlayingAll ? 'Stop Audio' : 'Play Full Lesson'}
                                     </button>
                                 </div>
-                                <div className="progress-indicator">
-                                    {currentSlide + 1} / {activeLesson.content.length}
-                                </div>
+                                <div className="progress-indicator">{currentSlide + 1} / {activeLesson.content.length}</div>
                             </div>
 
                             {activeLesson.type === 'dialogue' ? (
@@ -282,9 +352,7 @@ const Lessons = () => {
                                             <div className="bubble-content">
                                                 <div className="bubble-header">
                                                     <p className="txt-fr">{item[targetLanguage.toLowerCase()] || item.french}</p>
-                                                    <button className="btn-mini-voice" onClick={(e) => { e.stopPropagation(); playAudio(e, item[targetLanguage.toLowerCase()] || item.french); }}>
-                                                        <Volume2 size={16} />
-                                                    </button>
+                                                    <button className="btn-mini-voice" onClick={(e) => { e.stopPropagation(); playAudio(e, item[targetLanguage.toLowerCase()] || item.french); }}><Volume2 size={16} /></button>
                                                 </div>
                                                 <p className="txt-en">{item.english}</p>
                                                 <div className="bubble-actions">
@@ -294,44 +362,26 @@ const Lessons = () => {
                                         </div>
                                     ))}
                                     <div className="dialogue-footer">
-                                        <Trophy size={40} className="text-accent" />
-                                        <h3>Excellent Progress!</h3>
-                                        <p>Conversation Complete! +50 XP</p>
-                                        <button className="btn btn-primary" onClick={() => handleFinish(location.state?.levelNumber)}>
-                                            Finish Lesson
+                                        <Brain size={40} className="text-primary" />
+                                        <h3>Ready for the test?</h3>
+                                        <p>Complete the unit test to prove your knowledge!</p>
+                                        <button className="btn btn-primary" onClick={() => generateQuiz(activeLesson)}>
+                                            Start Unit Test <ArrowRight size={20} />
                                         </button>
                                     </div>
                                 </div>
                             ) : (
                                 <div className="flashcard-container">
-                                    <button
-                                        className="nav-btn prev"
-                                        onClick={prevSlide}
-                                        disabled={currentSlide === 0}
-                                    >
-                                        <ChevronLeft size={32} />
-                                    </button>
-
-                                    <div
-                                        className={`flashcard ${isFlipped ? 'flipped' : ''}`}
-                                        onClick={() => { setIsFlipped(!isFlipped); playCardSound(); }}
-                                    >
+                                    <button className="nav-btn prev" onClick={prevSlide} disabled={currentSlide === 0}><ChevronLeft size={32} /></button>
+                                    <div className={`flashcard ${isFlipped ? 'flipped' : ''}`} onClick={() => { setIsFlipped(!isFlipped); playCardSound(); }}>
                                         <div className="card-top">
                                             <span className="card-count">{currentSlide + 1} / {activeLesson.content.length}</span>
-                                            <button className="btn-voice" onClick={(e) => { e.stopPropagation(); playAudio(e, activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french); }}>
-                                                <Volume2 size={20} />
-                                            </button>
+                                            <button className="btn-voice" onClick={(e) => { e.stopPropagation(); playAudio(e, activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french); }}><Volume2 size={20} /></button>
                                         </div>
                                         <div className="card-face front">
                                             <span className="sc-label">{targetLanguage}</span>
-                                            <div className="sc-content">
-                                                {activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french}
-                                            </div>
-                                            <div
-                                                className="sc-pronunciation"
-                                                onClick={(e) => playAudio(e, activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french)}
-                                                style={{ cursor: 'pointer' }}
-                                            >
+                                            <div className="sc-content">{activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french}</div>
+                                            <div className="sc-pronunciation" onClick={(e) => playAudio(e, activeLesson.content[currentSlide][targetLanguage.toLowerCase()] || activeLesson.content[currentSlide].french)} style={{ cursor: 'pointer' }}>
                                                 <Volume2 size={16} />
                                                 {activeLesson.content[currentSlide][targetLanguage.toLowerCase().substring(0, 3) + 'Pronunciation'] || activeLesson.content[currentSlide].pronunciation}
                                             </div>
@@ -342,19 +392,11 @@ const Lessons = () => {
                                         </div>
                                         <p className="sc-hint">Click to flip</p>
                                     </div>
-
-                                    <button
-                                        className="nav-btn next"
-                                        onClick={nextSlide}
-                                        disabled={currentSlide === activeLesson.content.length - 1}
-                                    >
-                                        <ChevronRight size={32} />
-                                    </button>
-
+                                    <button className="nav-btn next" onClick={nextSlide} disabled={currentSlide === activeLesson.content.length - 1}><ChevronRight size={32} /></button>
                                     {currentSlide === activeLesson.content.length - 1 && (
                                         <div className="finish-overlay animate-fade-in">
-                                            <button className="btn btn-primary btn-glow" onClick={() => handleFinish(location.state?.levelNumber)}>
-                                                Finish & Unlock Next Level
+                                            <button className="btn btn-primary btn-glow" onClick={() => generateQuiz(activeLesson)}>
+                                                Take Unit Test <ArrowRight size={20} />
                                             </button>
                                         </div>
                                     )}

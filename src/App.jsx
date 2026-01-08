@@ -13,26 +13,38 @@ import './App.css';
 
 import Onboarding from './components/features/Onboarding';
 import Grammar from './pages/Grammar';
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+import { Navigate } from 'react-router-dom';
+
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
 function App() {
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+
   return (
     <LanguageProvider>
       <SoundProvider>
         <Router>
           <div className="app-wrapper">
             <Onboarding />
-            <Header />
+            {isAuthenticated && <Header />}
             <main>
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/chat" element={<Chat />} />
-                <Route path="/lessons" element={<Lessons />} />
-                <Route path="/level-path" element={<LevelPath />} />
-                <Route path="/grammar" element={<Grammar />} />
-                <Route path="/game" element={<Game />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+                <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
+                <Route path="/lessons" element={<PrivateRoute><Lessons /></PrivateRoute>} />
+                <Route path="/level-path" element={<PrivateRoute><LevelPath /></PrivateRoute>} />
+                <Route path="/grammar" element={<PrivateRoute><Grammar /></PrivateRoute>} />
+                <Route path="/game" element={<PrivateRoute><Game /></PrivateRoute>} />
+                <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
               </Routes>
             </main>
-            <Footer />
+            {isAuthenticated && <Footer />}
           </div>
         </Router>
       </SoundProvider>
