@@ -114,16 +114,23 @@ const Chat = () => {
             utterance.lang = targetLangCode;
 
             const availableVoices = window.speechSynthesis.getVoices();
-            const preferredVoice = availableVoices.find(v =>
-                v.lang.toLowerCase().replace('_', '-') === targetLangCode.toLowerCase() &&
-                (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium'))
-            ) || availableVoices.find(v => v.lang.toLowerCase().replace('_', '-') === targetLangCode.toLowerCase());
 
-            if (preferredVoice) utterance.voice = preferredVoice;
+            // Search for French accent specifically
+            const preferredVoice = availableVoices.find(v =>
+                v.lang.toLowerCase().startsWith('fr') &&
+                (v.name.includes('Google') || v.name.includes('France') || v.name.includes('Thomas') || v.name.includes('Audrey'))
+            ) || availableVoices.find(v =>
+                v.lang.toLowerCase().startsWith('fr')
+            );
+
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+                utterance.lang = preferredVoice.lang;
+            }
 
             // Stable Mobile Settings
             utterance.rate = 0.8;
-            utterance.pitch = 1.05;
+            utterance.pitch = 1.0;
 
             utterance.onstart = () => setIsSpeaking(true);
             utterance.onend = () => setIsSpeaking(false);
