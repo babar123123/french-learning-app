@@ -72,9 +72,11 @@ const Header = () => {
                   <div
                     key={lang}
                     className={`lang-option ${targetLanguage === lang ? 'active' : ''}`}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setTargetLanguage(lang);
                       playBlip();
+                      setIsLangOpen(false);
                     }}
                   >
                     {lang}
