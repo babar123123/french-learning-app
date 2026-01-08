@@ -241,49 +241,26 @@ const Lessons = () => {
                 </div>
             </div>
 
-            <div className="lessons-list">
+            <div className="lessons-grid">
                 {filteredLessons.map((lesson, idx) => (
-                    <div key={lesson.id} className="lesson-module-group animate-fade-in" style={{ animationDelay: `${idx * 100}ms` }}>
-                        <div className="module-title-row">
-                            <span className="module-number">Unit {idx + 1}</span>
-                            <h2 className="module-main-title">{lesson[targetLanguage.toLowerCase() + 'Title'] || lesson.title}</h2>
-                        </div>
-
-                        <div className="module-cards-row">
-                            {/* Study Card */}
-                            <div
-                                className="module-mini-card lesson glass-panel"
-                                onClick={() => openLesson(lesson)}
-                                style={{
-                                    backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url(https://source.unsplash.com/400x300/?${encodeURIComponent(lesson.title.toLowerCase().replace(/\s+/g, ','))})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center'
-                                }}
-                            >
-                                <div className="mini-card-icon"><BookOpen size={24} /></div>
-                                <div className="mini-card-info">
-                                    <h3>Study Lesson</h3>
-                                    <p>Learn new vocabulary & phrases</p>
-                                </div>
-                                <div className="mini-card-action"><ChevronRight size={20} /></div>
-                            </div>
-
-                            {/* Test Card */}
-                            <div
-                                className="module-mini-card test glass-panel"
-                                onClick={() => { openLesson(lesson); generateQuiz(lesson); }}
-                                style={{
-                                    backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url(https://source.unsplash.com/400x300/?exam,test,quiz)`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center'
-                                }}
-                            >
-                                <div className="mini-card-icon"><GraduationCap size={24} /></div>
-                                <div className="mini-card-info">
-                                    <h3>Unit Test</h3>
-                                    <p>Prove your mastery to advance</p>
-                                </div>
-                                <div className="mini-card-action"><ChevronRight size={20} /></div>
+                    <div
+                        key={lesson.id}
+                        className="lesson-card glass-panel animate-fade-in"
+                        onClick={() => openLesson(lesson)}
+                        style={{
+                            animationDelay: `${idx * 50}ms`,
+                            backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.9)), url(https://source.unsplash.com/600x400/?${encodeURIComponent(lesson.title.toLowerCase().replace(/\s+/g, ','))})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                    >
+                        <div className="lesson-card-badge">Unit {idx + 1}</div>
+                        <div className="lesson-card-content">
+                            <h3 className="lesson-card-title">{lesson[targetLanguage.toLowerCase() + 'Title'] || lesson.title}</h3>
+                            <p className="lesson-card-desc">{lesson.content?.length || lesson.dialogue?.length || 0} items</p>
+                            <div className="lesson-card-footer">
+                                <span className="lesson-level-badge">{lesson.level}</span>
+                                <ArrowRight size={20} className="lesson-arrow" />
                             </div>
                         </div>
                     </div>
