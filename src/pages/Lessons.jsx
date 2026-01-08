@@ -183,15 +183,15 @@ const Lessons = () => {
                                 </div>
                                 <p className="sc-hint">Click to flip</p>
                             </div>
-                        </div>
 
-                        <button
-                            className="nav-btn next"
-                            onClick={nextSlide}
-                            disabled={currentSlide === activeLesson.content.length - 1}
-                        >
-                            <ChevronRight size={32} />
-                        </button>
+                            <button
+                                className="nav-btn next"
+                                onClick={nextSlide}
+                                disabled={currentSlide === activeLesson.content.length - 1}
+                            >
+                                <ChevronRight size={32} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
