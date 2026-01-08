@@ -98,43 +98,61 @@ const Chat = () => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
 
-        // Clean text (remove markdown/formatting for better speech)
-        const cleanText = text.replace(/[*#_\[\]]/g, '');
-        const utterance = new SpeechSynthesisUtterance(cleanText);
-
         const langCodes = {
             'French': 'fr-FR',
             'Spanish': 'es-ES',
             'German': 'de-DE'
         };
+        const targetLangCode = langCodes[targetLanguage] || 'en-US';
 
-        const lang = langCodes[targetLanguage] || 'en-US';
-        utterance.lang = lang;
+        // Split text by lines to identify sections
+        const lines = text.split('\n');
 
-        // Try to find a high-quality natural voice for the target language
-        const availableVoices = voicesRef.current.length > 0 ? voicesRef.current : window.speechSynthesis.getVoices();
-        const preferredVoice = availableVoices.find(v =>
-            v.lang.startsWith(lang.split('-')[0]) &&
-            (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium'))
-        ) || availableVoices.find(v => v.lang.startsWith(lang.split('-')[0]));
+        // We'll queue utterances. To track completion, we use a counter
+        let linesToSpeak = lines.filter(l => l.trim().length > 0);
+        let completedCount = 0;
 
-        if (preferredVoice) {
-            utterance.voice = preferredVoice;
-        }
+        linesToSpeak.forEach((line, index) => {
+            // Clean the line from markdown
+            const cleanLine = line.replace(/[*#_\[\]]/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanLine);
 
-        // Adjust rate and pitch for better mobile clarity
-        // Mobile browsers often sound "robotic" if rate is default or too fast
-        utterance.rate = 0.9;
-        utterance.pitch = 1.0;
+            // Intelligence: Detect if this line is the learning phrase or explanation
+            if (line.includes(`${targetLanguage}:`)) {
+                // If it's the target language line, use target accent
+                utterance.lang = targetLangCode;
+                utterance.rate = 0.8; // Slower for clear learning
+            } else {
+                // If it's instruction or explanation, use English/General accent
+                // Otherwise a French accent trying to read Roman Urdu/English sounds like a mess.
+                utterance.lang = 'en-US';
+                utterance.rate = 0.95;
+            }
 
-        utterance.onstart = () => setIsSpeaking(true);
-        utterance.onend = () => setIsSpeaking(false);
-        utterance.onerror = (e) => {
-            console.error("Speech error:", e);
-            setIsSpeaking(false);
-        };
+            // Voice selection logic for each chunk
+            const availableVoices = voicesRef.current.length > 0 ? voicesRef.current : window.speechSynthesis.getVoices();
+            const preferredVoice = availableVoices.find(v =>
+                v.lang.startsWith(utterance.lang.split('-')[0]) &&
+                (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium'))
+            ) || availableVoices.find(v => v.lang.startsWith(utterance.lang.startsWith('en') ? 'en' : utterance.lang.split('-')[0]));
 
-        window.speechSynthesis.speak(utterance);
+            if (preferredVoice) utterance.voice = preferredVoice;
+
+            utterance.pitch = 1.0;
+
+            if (index === 0) utterance.onstart = () => setIsSpeaking(true);
+
+            utterance.onend = () => {
+                completedCount++;
+                if (completedCount >= linesToSpeak.length) {
+                    setIsSpeaking(false);
+                }
+            };
+
+            utterance.onerror = () => setIsSpeaking(false);
+
+            window.speechSynthesis.speak(utterance);
+        });
     };
 
     const stopSpeak = () => {
