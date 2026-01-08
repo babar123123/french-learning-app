@@ -98,6 +98,10 @@ const Chat = () => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
 
+        // Clean text (remove any markdown or extra punctuation)
+        const cleanText = text.replace(/[*#_\[\]]/g, '').trim();
+        if (!cleanText) return;
+
         const langCodes = {
             'French': 'fr-FR',
             'Spanish': 'es-ES',
@@ -105,54 +109,39 @@ const Chat = () => {
         };
         const targetLangCode = langCodes[targetLanguage] || 'en-US';
 
-        // Split text by lines to identify sections
-        const lines = text.split('\n');
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = targetLangCode;
 
-        // We'll queue utterances. To track completion, we use a counter
-        let linesToSpeak = lines.filter(l => l.trim().length > 0);
-        let completedCount = 0;
+        // Mobile browsers often need voices carefully selected
+        const availableVoices = voicesRef.current.length > 0 ? voicesRef.current : window.speechSynthesis.getVoices();
 
-        linesToSpeak.forEach((line, index) => {
-            // Clean the line from markdown
-            const cleanLine = line.replace(/[*#_\[\]]/g, '');
-            const utterance = new SpeechSynthesisUtterance(cleanLine);
+        // Strategy: Look for specific high-quality mobile/google voices
+        const preferredVoice = availableVoices.find(v =>
+            v.lang.replace('_', '-').startsWith(targetLangCode) &&
+            (v.name.includes('Premium') || v.name.includes('Natural'))
+        ) || availableVoices.find(v =>
+            v.lang.replace('_', '-').startsWith(targetLangCode) &&
+            v.name.includes('Google')
+        ) || availableVoices.find(v =>
+            v.lang.replace('_', '-').startsWith(targetLangCode)
+        );
 
-            // Intelligence: Detect if this line is the learning phrase or explanation
-            if (line.includes(`${targetLanguage}:`)) {
-                // If it's the target language line, use target accent
-                utterance.lang = targetLangCode;
-                utterance.rate = 0.8; // Slower for clear learning
-            } else {
-                // If it's instruction or explanation, use English/General accent
-                // Otherwise a French accent trying to read Roman Urdu/English sounds like a mess.
-                utterance.lang = 'en-US';
-                utterance.rate = 0.95;
-            }
+        if (preferredVoice) {
+            utterance.voice = preferredVoice;
+        }
 
-            // Voice selection logic for each chunk
-            const availableVoices = voicesRef.current.length > 0 ? voicesRef.current : window.speechSynthesis.getVoices();
-            const preferredVoice = availableVoices.find(v =>
-                v.lang.startsWith(utterance.lang.split('-')[0]) &&
-                (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium'))
-            ) || availableVoices.find(v => v.lang.startsWith(utterance.lang.startsWith('en') ? 'en' : utterance.lang.split('-')[0]));
+        // Optimized for Mobile Clarity
+        utterance.rate = 0.82; // Slower for clarity
+        utterance.pitch = 1.05; // Slightly higher pitch for mobile speakers
 
-            if (preferredVoice) utterance.voice = preferredVoice;
+        utterance.onstart = () => setIsSpeaking(true);
+        utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = (e) => {
+            console.error("SpeechSynthesis error:", e);
+            setIsSpeaking(false);
+        };
 
-            utterance.pitch = 1.0;
-
-            if (index === 0) utterance.onstart = () => setIsSpeaking(true);
-
-            utterance.onend = () => {
-                completedCount++;
-                if (completedCount >= linesToSpeak.length) {
-                    setIsSpeaking(false);
-                }
-            };
-
-            utterance.onerror = () => setIsSpeaking(false);
-
-            window.speechSynthesis.speak(utterance);
-        });
+        window.speechSynthesis.speak(utterance);
     };
 
     const stopSpeak = () => {
@@ -420,7 +409,14 @@ RULES:
                                         <button className="speak-msg-btn" onClick={() => speak(msg.text)}>
                                             <Volume2 size={14} /> Listen
                                         </button>
-                                        <button className="speak-msg-btn translate-btn" onClick={() => toggleTranslation(msg.id)}>
+                                        <button
+                                            className="speak-msg-btn translate-btn"
+                                            onClick={() => toggleTranslation(msg.id)}
+                                            onTouchEnd={(e) => {
+                                                e.preventDefault();
+                                                toggleTranslation(msg.id);
+                                            }}
+                                        >
                                             <Languages size={14} /> {msg.showTranslation ? 'Hide' : 'Translate'}
                                         </button>
                                         {isSpeaking && (
