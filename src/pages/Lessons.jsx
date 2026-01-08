@@ -251,7 +251,15 @@ const Lessons = () => {
 
                         <div className="module-cards-row">
                             {/* Study Card */}
-                            <div className="module-mini-card lesson glass-panel" onClick={() => openLesson(lesson)}>
+                            <div
+                                className="module-mini-card lesson glass-panel"
+                                onClick={() => openLesson(lesson)}
+                                style={{
+                                    backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url(https://source.unsplash.com/400x300/?${encodeURIComponent(lesson.title.toLowerCase().replace(/\s+/g, ','))})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center'
+                                }}
+                            >
                                 <div className="mini-card-icon"><BookOpen size={24} /></div>
                                 <div className="mini-card-info">
                                     <h3>Study Lesson</h3>
@@ -261,7 +269,15 @@ const Lessons = () => {
                             </div>
 
                             {/* Test Card */}
-                            <div className="module-mini-card test glass-panel" onClick={() => { openLesson(lesson); generateQuiz(lesson); }}>
+                            <div
+                                className="module-mini-card test glass-panel"
+                                onClick={() => { openLesson(lesson); generateQuiz(lesson); }}
+                                style={{
+                                    backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url(https://source.unsplash.com/400x300/?exam,test,quiz)`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center'
+                                }}
+                            >
                                 <div className="mini-card-icon"><GraduationCap size={24} /></div>
                                 <div className="mini-card-info">
                                     <h3>Unit Test</h3>

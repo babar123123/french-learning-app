@@ -168,6 +168,17 @@ const Header = () => {
                   {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
                   <span style={{ fontSize: '0.9rem', fontWeight: '600' }}>{isMuted ? "Unmute Music" : "Mute Music"}</span>
                 </button>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    localStorage.removeItem('isAuthenticated');
+                    window.location.reload();
+                  }}
+                  style={{ width: '100%', marginTop: '16px', padding: '14px' }}
+                >
+                  Logout
+                </button>
               </div>
             </div>
           </div>

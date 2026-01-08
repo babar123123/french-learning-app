@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { lessonsData } from '../data/lessons';
 import { useSound } from '../context/SoundContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Lock, Star, Check, Trophy, Play, Zap, X, BookOpen } from 'lucide-react';
+import { Lock, Star, Check, Trophy, Play, Zap, X, BookOpen, ArrowLeft } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import './LevelPath.css';
 
@@ -88,6 +88,17 @@ const LevelPath = () => {
                     </div>
                 </div>
             )}
+
+            <button
+                className="back-button glass"
+                onClick={() => {
+                    playTap();
+                    navigate('/');
+                }}
+            >
+                <ArrowLeft size={20} />
+                <span>Back to Home</span>
+            </button>
 
             <header className="path-header animate-fade-in">
                 <div className="header-top">
