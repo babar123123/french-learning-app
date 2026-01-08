@@ -65,7 +65,7 @@ const Login = () => {
             }));
 
             playSuccess();
-            window.location.href = '#/'; // Hash router fix
+            window.location.href = '#/welcome'; // Hash router fix
             window.location.reload();
         } catch (err) {
             setError("Google Login failed. Please try again.");
@@ -87,7 +87,7 @@ const Login = () => {
             if (savedUser && savedUser.email === formData.email && savedUser.password === formData.password) {
                 localStorage.setItem('isAuthenticated', 'true');
                 playSuccess();
-                navigate('/');
+                navigate('/welcome');
             } else {
                 setError('Invalid email or password');
             }
@@ -99,7 +99,7 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(formData));
             localStorage.setItem('isAuthenticated', 'true');
             playSuccess();
-            navigate('/');
+            navigate('/welcome');
         }
     };
 

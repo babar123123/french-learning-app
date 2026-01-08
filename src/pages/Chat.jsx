@@ -102,7 +102,7 @@ const Chat = () => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
 
-        // Small delay to ensure cancellation finishes on mobile
+        // Optimized delay for faster mobile response
         setTimeout(() => {
             const cleanText = text.replace(/[*#_\[\]]/g, '').trim();
             if (!cleanText) return;
@@ -115,7 +115,7 @@ const Chat = () => {
 
             const availableVoices = window.speechSynthesis.getVoices();
 
-            // Search for French accent specifically
+            // Search for French accent specifically (Thomas, Audrey are standard high-quality voices)
             const preferredVoice = availableVoices.find(v =>
                 v.lang.toLowerCase().startsWith('fr') &&
                 (v.name.includes('Google') || v.name.includes('France') || v.name.includes('Thomas') || v.name.includes('Audrey'))
@@ -128,8 +128,8 @@ const Chat = () => {
                 utterance.lang = preferredVoice.lang;
             }
 
-            // Stable Mobile Settings
-            utterance.rate = 0.8;
+            // Natural Professional Settings
+            utterance.rate = 0.92;
             utterance.pitch = 1.0;
 
             utterance.onstart = () => setIsSpeaking(true);
@@ -137,7 +137,7 @@ const Chat = () => {
             utterance.onerror = () => setIsSpeaking(false);
 
             window.speechSynthesis.speak(utterance);
-        }, 100);
+        }, 50);
     };
 
     const stopSpeak = () => {
