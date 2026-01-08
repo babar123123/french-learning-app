@@ -1,0 +1,239 @@
+.game-page {
+    padding-top: calc(var(--nav-height) + 40px);
+    padding-bottom: 80px;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 600px;
+    min-height: 500px;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Menu Styles */
+.game-icon-circle {
+    width: 100px;
+    height: 100px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    color: var(--primary);
+}
+
+.game-stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.g-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Playing Styles */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+}
+
+.q-progress {
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    flex: 1;
+}
+
+.p-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin-top: 8px;
+    width: 150px;
+    overflow: hidden;
+}
+
+.p-fill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.game-score {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: white;
+}
+
+.question-box {
+    margin-bottom: 40px;
+}
+
+.q-label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.q-text {
+    font-size: 2.5rem;
+    color: white;
+    font-weight: 800;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.opt-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: var(--glass-border);
+    border-radius: 16px;
+    padding: 20px;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.opt-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.opt-btn.correct {
+    background: #10b981 !important;
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.opt-btn.locked {
+    opacity: 0.5;
+}
+
+.feedback-banner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    animation: slideUp 0.3s ease;
+}
+
+.feedback-banner.correct {
+    background: rgba(16, 185, 129, 0.9);
+    color: white;
+}
+
+.feedback-banner.wrong {
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+}
+
+/* Result Styles */
+.final-score {
+    margin: 40px 0;
+}
+
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border: 8px solid var(--accent);
+    border-radius: 50%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.score-num {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+}
+
+.score-xp {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.success-msg {
+    color: #10b981;
+    font-weight: 600;
+    margin-top: 8px;
+    font-size: 1.1rem;
+}
+
+.trophy-anim {
+    animation: bounce 2s infinite;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@media (max-width: 600px) {
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .q-text {
+        font-size: 1.8rem;
+    }
+
+    .game-container {
+        padding: 24px;
+        min-height: auto;
+    }
+}

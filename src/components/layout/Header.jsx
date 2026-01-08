@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { MessageSquare, BookOpen, Crown, Menu, X, Volume2, VolumeX, Languages, ChevronRight } from 'lucide-react';
+import { MessageSquare, BookOpen, Crown, Menu, X, Volume2, VolumeX, Languages, ChevronRight, Trophy } from 'lucide-react';
 import { useSound } from '../../context/SoundContext';
 import { useLanguage } from '../../context/LanguageContext';
 import './Layout.css';
@@ -34,6 +34,7 @@ const Header = () => {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Curriculum', path: '/lessons', icon: <BookOpen size={18} /> },
+    { name: 'Challenge', path: '/game', icon: <Trophy size={18} /> },
     { name: 'AI Tutor', path: '/chat', icon: <MessageSquare size={18} /> },
   ];
 
