@@ -16,6 +16,7 @@ import Grammar from './pages/Grammar';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import { Navigate } from 'react-router-dom';
+import ScrollToTop from './utils/ScrollToTop';
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
@@ -29,6 +30,7 @@ function App() {
     <LanguageProvider>
       <SoundProvider>
         <Router>
+          <ScrollToTop />
           <div className="app-wrapper">
             <Onboarding />
             {isAuthenticated && <Header />}
