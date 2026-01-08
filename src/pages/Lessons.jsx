@@ -5,6 +5,7 @@ import { Trophy, RefreshCw, Star, Zap, Brain, ArrowRight, X, ChevronLeft, Chevro
 import { useSound } from '../context/SoundContext';
 import { useLanguage } from '../context/LanguageContext';
 import confetti from 'canvas-confetti';
+import { getLessonImage } from '../utils/lessonImages';
 import './Lessons.css';
 
 const Lessons = () => {
@@ -243,8 +244,8 @@ const Lessons = () => {
 
             <div className="lessons-grid">
                 {filteredLessons.map((lesson, idx) => {
-                    const imageId = 100 + idx;
-                    const imageUrl = `https://picsum.photos/seed/${imageId}/600/400`;
+                    // Map lesson topics to relevant image keywords
+                    const imageUrl = getLessonImage(lesson.title);
 
                     return (
                         <div
@@ -409,3 +410,4 @@ const Lessons = () => {
 };
 
 export default Lessons;
+
