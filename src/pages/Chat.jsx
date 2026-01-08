@@ -116,17 +116,18 @@ const Chat = () => {
         const utterance = new SpeechSynthesisUtterance(cleanText);
         utterance.lang = targetLangCode;
 
-        // Mobile browsers often need voices carefully selected
-        const availableVoices = voicesRef.current.length > 0 ? voicesRef.current : window.speechSynthesis.getVoices();
+        const availableVoices = window.speechSynthesis.getVoices();
+        const currentVoices = availableVoices.length > 0 ? availableVoices : voicesRef.current;
 
-        // Strategy: Look for specific high-quality mobile/google voices
-        const preferredVoice = availableVoices.find(v =>
-            v.lang.replace('_', '-').startsWith(targetLangCode) &&
-            (v.name.includes('Premium') || v.name.includes('Natural'))
-        ) || availableVoices.find(v =>
-            v.lang.replace('_', '-').startsWith(targetLangCode) &&
-            v.name.includes('Google')
-        ) || availableVoices.find(v =>
+        // High-precision voice selection for Mobile
+        // 1. Look for 'Google' voices (usually best on Android/Chrome)
+        // 2. Look for 'Natural' or 'Premium' (usually best on iOS/Safari)
+        // 3. Look for any matching locale
+        const preferredVoice = currentVoices.find(v =>
+            v.lang.replace('_', '-').startsWith(targetLangCode) && v.name.includes('Google')
+        ) || currentVoices.find(v =>
+            v.lang.replace('_', '-').startsWith(targetLangCode) && (v.name.includes('Natural') || v.name.includes('Premium'))
+        ) || currentVoices.find(v =>
             v.lang.replace('_', '-').startsWith(targetLangCode)
         );
 
@@ -134,9 +135,9 @@ const Chat = () => {
             utterance.voice = preferredVoice;
         }
 
-        // Optimized for Mobile Clarity
-        utterance.rate = 0.82; // Slower for clarity
-        utterance.pitch = 1.05; // Slightly higher pitch for mobile speakers
+        // Refined for Mobile Naturalness
+        utterance.rate = 0.88; // Slightly faster for more natural flow (prev 0.82)
+        utterance.pitch = 1.02; // Close to normal but clear
 
         utterance.onstart = () => setIsSpeaking(true);
         utterance.onend = () => setIsSpeaking(false);
