@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, ArrowRight, X } from 'lucide-react';
+import { Bot, Sparkles, ArrowRight } from 'lucide-react';
 import './Welcome.css';
 
 const Welcome = () => {
@@ -12,50 +12,53 @@ const Welcome = () => {
         const savedUser = JSON.parse(localStorage.getItem('user'));
         setUser(savedUser);
 
-        // Short delay for animation entry
+        // Animation trigger
         const timer = setTimeout(() => setShowContent(true), 100);
-
-        // Auto-redirect is disabled per previous request to keep it stable
         return () => clearTimeout(timer);
-    }, [navigate]);
+    }, []);
 
     const handleContinue = () => {
         navigate('/');
     };
 
     return (
-        <div className="onboarding-overlay welcome-screen">
-            <div className={`onboarding-modal glass-panel ${showContent ? 'animate-fade-in' : ''}`}>
-                {/* Skip button top right like in the image */}
-                <button className="skip-btn" onClick={handleContinue}>
-                    Skip
-                </button>
+        <div className="welcome-splash">
+            {/* Premium Animated Background */}
+            <div className="login-visual-bg">
+                <div className="gradient-sphere"></div>
+                <div className="gradient-sphere secondary"></div>
+            </div>
 
-                <div className="step-content">
-                    {/* Centered Sparkle Icon */}
-                    <div className="icon-box" style={{ background: 'rgba(99, 102, 241, 0.15)' }}>
-                        <Sparkles size={48} color="white" />
+            <div className={`welcome-card-premium glass-panel ${showContent ? 'animate-zoom-in' : ''}`}>
+                <div className="welcome-header">
+                    <h1 className="text-gradient">Bienvenue</h1>
+
+                    <div className="bot-avatar-container">
+                        <div className="bot-avatar animate-float">
+                            <Bot size={60} color="white" />
+                            <div className="sparkle-effect">
+                                <Sparkles size={24} className="sparkle-1" />
+                                <Sparkles size={24} className="sparkle-2" />
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Personalized Title */}
-                    <h2>Bienvenue, {user?.name || 'Explorer'}!</h2>
-
-                    {/* App Description */}
-                    <p>Lumière is excited to guide you on your French quest. Ready to turn your curiosity into conversation?</p>
+                    <h2 className="user-name-display">{user?.name || 'Explorer'}!</h2>
                 </div>
 
-                <div className="onboarding-footer">
-                    {/* Step dots like in the image */}
-                    <div className="dots">
-                        <div className="dot active"></div>
-                        <div className="dot"></div>
-                        <div className="dot"></div>
-                    </div>
+                <div className="welcome-body">
+                    <p className="subtitle">Lumière is excited to guide you on your French quest. Ready to turn your curiosity into conversation?</p>
 
-                    {/* Next button with arrow like in the image */}
-                    <button className="btn btn-primary next-btn welcome-next-btn" onClick={handleContinue}>
-                        Next <ArrowRight size={18} />
+                    <div className="welcome-quote">
+                        <p>"Your journey to fluency starts here."</p>
+                    </div>
+                </div>
+
+                <div className="welcome-footer-actions">
+                    <button className="btn btn-primary next-btn premium-next" onClick={handleContinue}>
+                        Enter Quest <ArrowRight size={20} />
                     </button>
+                    <p className="tap-hint">Tap to start learning</p>
                 </div>
             </div>
         </div>
