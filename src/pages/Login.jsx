@@ -96,27 +96,52 @@ const Login = () => {
             <div className="login-visual-bg">
                 <div className="gradient-sphere"></div>
                 <div className="gradient-sphere secondary"></div>
+                <div className="floating-elements">
+                    <div className="float-item p1">FR</div>
+                    <div className="float-item p2">Bonjour</div>
+                    <div className="float-item p3">AI</div>
+                </div>
             </div>
 
             <div className="login-container glass-panel animate-fade-in">
                 <div className="login-header">
-                    <div className="login-logo">
-                        <Crown size={44} className="text-primary" />
-                        <span className="logo-text">Lumière</span>
+                    <div className="login-logo-ring">
+                        <Crown size={32} className="text-primary" />
                     </div>
-                    <h1>Start Your Quest</h1>
-                    <p>Enter the world of French with a single tap.</p>
+                    <h1>Lumière</h1>
+                    <p className="subtitle">Master French with AI Intelligence</p>
                 </div>
 
-                {error && <div className="error-msg animate-shake" style={{ marginBottom: '20px' }}>{error}</div>}
+                <div className="feature-preview">
+                    <div className="feature-item">
+                        <div className="feat-icon"><ArrowRight size={14} /></div>
+                        <span>Interactive Conversations</span>
+                    </div>
+                    <div className="feature-item">
+                        <div className="feat-icon"><ArrowRight size={14} /></div>
+                        <span>Personalized Learning Path</span>
+                    </div>
+                    <div className="feature-item">
+                        <div className="feat-icon"><ArrowRight size={14} /></div>
+                        <span>Real-time Corrections</span>
+                    </div>
+                </div>
 
-                <div className="social-login-vertical" style={{ marginTop: '20px' }}>
-                    <div ref={googleButtonRef} className="official-google-container"></div>
-                    {!googleReady && <div className="loading-spinner-simple">Connecting to Google...</div>}
+                {error && <div className="error-msg animate-shake">{error}</div>}
+
+                <div className="cta-section">
+                    <p className="cta-label">Ready to start your quest?</p>
+                    <div className="social-login-vertical">
+                        <div ref={googleButtonRef} className="official-google-container"></div>
+                        {!googleReady && <div className="loading-spinner-simple">Connecting to secure gateway...</div>}
+                    </div>
                 </div>
 
                 <div className="login-footer">
-                    <p className="trusted-text">Secure & Verified Authentication</p>
+                    <div className="trust-badge">
+                        <Lock size={12} />
+                        <span>Verified by Google Identity</span>
+                    </div>
                 </div>
             </div>
         </div>
