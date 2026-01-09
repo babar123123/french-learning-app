@@ -111,17 +111,22 @@
 }
 
 .login-logo-ring {
-    width: 70px;
-    height: 70px;
-    background: rgba(99, 102, 241, 0.1);
-    border: 1px solid rgba(99, 102, 241, 0.3);
+    width: 78px;
+    height: 78px;
+    background: rgba(244, 114, 182, 0.1);
+    border: 1px solid rgba(244, 114, 182, 0.3);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 24px;
-    box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 0 30px rgba(244, 114, 182, 0.2);
     animation: pulseGlow 3s infinite;
+}
+
+.login-logo-ring svg {
+    color: #f472b6 !important;
+    filter: drop-shadow(0 0 10px rgba(244, 114, 182, 0.5));
 }
 
 @keyframes pulseGlow {
@@ -129,21 +134,21 @@
     0%,
     100% {
         transform: scale(1);
-        box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        box-shadow: 0 0 20px rgba(244, 114, 182, 0.2);
     }
 
     50% {
         transform: scale(1.05);
-        box-shadow: 0 0 40px rgba(99, 102, 241, 0.4);
+        box-shadow: 0 0 40px rgba(244, 114, 182, 0.4);
     }
 }
 
 .login-header h1 {
-    font-size: 2.8rem;
+    font-size: 3.2rem;
     font-weight: 700;
     margin-bottom: 8px;
     letter-spacing: -2px;
-    background: linear-gradient(to bottom, #fff 0%, #94a3b8 100%);
+    background: linear-gradient(135deg, #818cf8 0%, #f472b6 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -177,19 +182,19 @@
 
 .feature-item:hover {
     background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(99, 102, 241, 0.3);
+    border-color: rgba(244, 114, 182, 0.3);
     transform: translateX(5px);
 }
 
 .feat-icon {
     width: 24px;
     height: 24px;
-    background: rgba(99, 102, 241, 0.2);
+    background: rgba(244, 114, 182, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6366f1;
+    color: #f472b6;
 }
 
 .feature-item span {
@@ -234,7 +239,7 @@
 
 .loading-spinner-simple {
     margin-top: 15px;
-    color: #6366f1;
+    color: #f472b6;
     font-size: 0.85rem;
     font-weight: 600;
     animation: softPulse 2s infinite;
