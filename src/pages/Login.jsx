@@ -8,31 +8,31 @@ const Login = () => {
     const navigate = useNavigate();
     const googleButtonRef = useRef(null);
     const { playTap, playSuccess, playBlip } = useSound();
-    const [isLogin, setIsLogin] = useState(true);
-    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+    const [googleReady, setGoogleReady] = useState(false);
     const [error, setError] = useState('');
+    const hasRenderedGoogle = useRef(false);
 
     const GOOGLE_CLIENT_ID = "752757921858-gm78m69iikgvr82455gc6aprcqa8a199.apps.googleusercontent.com";
-
-    const [googleReady, setGoogleReady] = useState(false);
-    const hasRenderedGoogle = useRef(false);
 
     useEffect(() => {
         let intervalId = null;
 
         const initGoogle = () => {
             if (window.google?.accounts?.id && !hasRenderedGoogle.current) {
-                // Kill interval immediately
                 if (intervalId) {
                     clearInterval(intervalId);
                     intervalId = null;
                 }
 
                 try {
+                    // Forcefully disable auto-select twice to be sure
+                    window.google.accounts.id.disableAutoSelect();
+
                     window.google.accounts.id.initialize({
                         client_id: GOOGLE_CLIENT_ID,
                         callback: handleGoogleResponse,
-                        auto_select: false // Prevent automatic account picking on refresh
+                        auto_select: false,
+                        cancel_on_tap_outside: true
                     });
 
                     if (googleButtonRef.current && !hasRenderedGoogle.current) {
@@ -42,9 +42,10 @@ const Login = () => {
                             {
                                 theme: "filled_blue",
                                 size: "large",
-                                width: "large", // Use responsive width
+                                width: "250", // Fixed width for stability
                                 text: "continue_with",
-                                shape: "pill"
+                                shape: "pill",
+                                logo_alignment: "left"
                             }
                         );
                     }
@@ -84,41 +85,9 @@ const Login = () => {
             }));
 
             playSuccess();
-            // Using navigate instead of reload for a smoother experience
             navigate('/welcome');
         } catch (err) {
             setError("Google Login failed. Please try again.");
-        }
-    };
-
-    const handleSwitch = () => {
-        playBlip();
-        setIsLogin(!isLogin);
-        setError('');
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        playTap();
-
-        if (isLogin) {
-            const savedUser = JSON.parse(localStorage.getItem('user'));
-            if (savedUser && savedUser.email === formData.email && savedUser.password === formData.password) {
-                localStorage.setItem('isAuthenticated', 'true');
-                playSuccess();
-                navigate('/welcome');
-            } else {
-                setError('Invalid email or password');
-            }
-        } else {
-            if (!formData.name || !formData.email || !formData.password) {
-                setError('Please fill all fields');
-                return;
-            }
-            localStorage.setItem('user', JSON.stringify(formData));
-            localStorage.setItem('isAuthenticated', 'true');
-            playSuccess();
-            navigate('/welcome');
         }
     };
 
@@ -132,74 +101,22 @@ const Login = () => {
             <div className="login-container glass-panel animate-fade-in">
                 <div className="login-header">
                     <div className="login-logo">
-                        <Crown size={40} className="text-primary" />
+                        <Crown size={44} className="text-primary" />
                         <span className="logo-text">Lumière</span>
                     </div>
-                    <h1>{isLogin ? 'Welcome Back' : 'Create Account'}</h1>
-                    <p>{isLogin ? 'Continue your language quest today.' : 'Join thousands of explorers.'}</p>
+                    <h1>Start Your Quest</h1>
+                    <p>Enter the world of French with a single tap.</p>
                 </div>
 
-                <form className="login-form" onSubmit={handleSubmit}>
-                    {error && <div className="error-msg animate-shake">{error}</div>}
+                {error && <div className="error-msg animate-shake" style={{ marginBottom: '20px' }}>{error}</div>}
 
-                    {!isLogin && (
-                        <div className="input-group">
-                            <User size={18} className="input-icon" />
-                            <input
-                                type="text"
-                                placeholder="Full Name"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            />
-                        </div>
-                    )}
-
-                    <div className="input-group">
-                        <Mail size={18} className="input-icon" />
-                        <input
-                            type="email"
-                            placeholder="Email Address"
-                            autoComplete="off"
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="input-group">
-                        <Lock size={18} className="input-icon" />
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            autoComplete="off"
-                            value={formData.password}
-                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        />
-                    </div>
-
-                    <button type="submit" className="btn btn-primary btn-glow login-submit">
-                        {isLogin ? 'Sign In' : 'Sign Up'}
-                        <ArrowRight size={20} />
-                    </button>
-                </form>
-
-                <div className="login-divider">
-                    <span>or continue with</span>
-                </div>
-
-                <div className="social-login-vertical">
-                    {/* The OFFICIAL Google Button Container */}
+                <div className="social-login-vertical" style={{ marginTop: '20px' }}>
                     <div ref={googleButtonRef} className="official-google-container"></div>
-
-
+                    {!googleReady && <div className="loading-spinner-simple">Connecting to Google...</div>}
                 </div>
 
                 <div className="login-footer">
-                    <p>
-                        {isLogin ? "Don't have an account?" : "Already have an account?"}
-                        <button className="switch-btn" onClick={handleSwitch}>
-                            {isLogin ? 'Sign Up' : 'Sign In'}
-                        </button>
-                    </p>
+                    <p className="trusted-text">Secure & Verified Authentication</p>
                 </div>
             </div>
         </div>
