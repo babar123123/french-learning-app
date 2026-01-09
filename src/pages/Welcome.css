@@ -7,11 +7,11 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
     box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
-    padding: 60px 0 40px !important;
+    padding: 40px 0 35px !important;
     /* Remove horizontal padding for slider */
     overflow: hidden;
     width: 92%;
-    max-width: 480px;
+    max-width: 420px;
 }
 
 /* Slider Engine */
@@ -43,11 +43,12 @@
 
 /* Welcome Slide Custom Styles */
 .bienvenue-text {
-    font-size: 3.5rem !important;
+    font-size: 3rem !important;
     font-weight: 800 !important;
-    margin-bottom: 20px !important;
-    letter-spacing: -2px;
+    margin-bottom: 15px !important;
+    letter-spacing: -1.5px;
     background: linear-gradient(135deg, #818cf8 0%, #d946ef 100%);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -57,23 +58,23 @@
 }
 
 .bot-circle {
-    width: 110px;
-    height: 110px;
+    width: 90px;
+    height: 90px;
     background: #4f46e5;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 10px 40px rgba(79, 70, 229, 0.6);
+    box-shadow: 0 10px 40px rgba(79, 70, 229, 0.5);
     position: relative;
     border: 3px solid rgba(255, 255, 255, 0.1);
 }
 
 .display-name {
-    font-size: 2.4rem !important;
+    font-size: 2.1rem !important;
     color: white !important;
     font-weight: 700 !important;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     letter-spacing: -1px;
 }
 
@@ -87,32 +88,32 @@
 
 /* Info Slide Custom Styles */
 .icon-box-large {
-    width: 120px;
-    height: 120px;
-    border-radius: 35px;
+    width: 100px;
+    height: 100px;
+    border-radius: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .step-title {
-    font-size: 2rem !important;
+    font-size: 1.8rem !important;
     font-weight: 700 !important;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     color: white;
 }
 
 .step-desc {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
     line-height: 1.6;
 }
 
 /* Footer & Buttons */
 .onboarding-footer {
-    margin-top: 40px;
+    margin-top: 30px;
     padding: 0 40px;
     display: flex;
     justify-content: space-between;
