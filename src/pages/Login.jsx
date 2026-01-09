@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Crown, Lock, ArrowRight } from 'lucide-react';
+import { Crown, Lock, ArrowRight, Sparkles, Trophy, Shield } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
 import './Login.css';
 
@@ -122,11 +122,11 @@ const Login = () => {
 
                 <div className="feature-grid">
                     <div className="feat-chip">
-                        <div className="feat-dot"></div>
+                        <Sparkles size={16} className="feat-icon" />
                         <span>AI-Powered Immersion</span>
                     </div>
                     <div className="feat-chip">
-                        <div className="feat-dot"></div>
+                        <Trophy size={16} className="feat-icon" />
                         <span>Personalized Journey</span>
                     </div>
                 </div>
@@ -137,7 +137,10 @@ const Login = () => {
                     <div className="cta-wrapper">
                         <p className="cta-sub">Begin your linguistic adventure</p>
                         <div className="social-login-vertical">
-                            <div ref={googleButtonRef} className="official-google-container"></div>
+                            <div className="google-custom-frame">
+                                <div className="frame-glow"></div>
+                                <div ref={googleButtonRef} className="official-google-container"></div>
+                            </div>
                             {!googleReady && <div className="loading-spinner-premium">Initializing Secure Link...</div>}
                         </div>
                     </div>
@@ -145,7 +148,7 @@ const Login = () => {
 
                 <div className="login-footer">
                     <div className="security-seal">
-                        <Lock size={12} />
+                        <Shield size={14} />
                         <span>Encrypted & Verified Access</span>
                     </div>
                 </div>
