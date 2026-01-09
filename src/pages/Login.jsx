@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Crown, Lock, ArrowRight, Mic, Brain, Globe } from 'lucide-react';
+import { Crown, Lock, ArrowRight } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
 import './Login.css';
 
@@ -120,24 +120,14 @@ const Login = () => {
                     </div>
                 </div>
 
-                <div className="feature-showcase-v4">
-                    <div className="feat-v4-item">
-                        <div className="feat-v4-icon-glow">
-                            <Mic size={28} />
-                        </div>
-                        <span className="feat-v4-label">AI Tutor</span>
+                <div className="feature-grid">
+                    <div className="feat-chip">
+                        <div className="feat-dot"></div>
+                        <span>AI-Powered Immersion</span>
                     </div>
-                    <div className="feat-v4-item">
-                        <div className="feat-v4-icon-glow">
-                            <Brain size={28} />
-                        </div>
-                        <span className="feat-v4-label">Adaptive Learning</span>
-                    </div>
-                    <div className="feat-v4-item">
-                        <div className="feat-v4-icon-glow">
-                            <Globe size={28} />
-                        </div>
-                        <span className="feat-v4-label">Cultural Insights</span>
+                    <div className="feat-chip">
+                        <div className="feat-dot"></div>
+                        <span>Personalized Journey</span>
                     </div>
                 </div>
 
