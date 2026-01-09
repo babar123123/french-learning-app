@@ -11,7 +11,6 @@ import { SoundProvider } from './context/SoundContext';
 import { LanguageProvider } from './context/LanguageContext';
 import './App.css';
 
-import Onboarding from './components/features/Onboarding';
 import Grammar from './pages/Grammar';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
@@ -32,7 +31,6 @@ const AppContent = () => {
 
   return (
     <div className="app-wrapper">
-      <Onboarding />
       {isAuthenticated && !isWelcomePage && <Header />}
       <main>
         <Routes>
