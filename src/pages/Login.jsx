@@ -14,37 +14,55 @@ const Login = () => {
 
     const GOOGLE_CLIENT_ID = "752757921858-gm78m69iikgvr82455gc6aprcqa8a199.apps.googleusercontent.com";
 
-    useEffect(() => {
-        const initGoogle = () => {
-            if (window.google) {
-                window.google.accounts.id.initialize({
-                    client_id: GOOGLE_CLIENT_ID,
-                    callback: handleGoogleResponse
-                });
+    const [googleReady, setGoogleReady] = useState(false);
 
-                // Render the official Google button (Highly Reliable)
-                window.google.accounts.id.renderButton(
-                    googleButtonRef.current,
-                    {
-                        theme: "filled_blue",
-                        size: "large",
-                        width: "200",
-                        text: "continue_with",
-                        shape: "pill"
+    useEffect(() => {
+        let intervalId = null;
+
+        const initGoogle = () => {
+            if (window.google?.accounts?.id) {
+                // Clear immediately to prevent multiple renders
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+
+                try {
+                    window.google.accounts.id.initialize({
+                        client_id: GOOGLE_CLIENT_ID,
+                        callback: handleGoogleResponse
+                    });
+
+                    if (googleButtonRef.current) {
+                        window.google.accounts.id.renderButton(
+                            googleButtonRef.current,
+                            {
+                                theme: "filled_blue",
+                                size: "large",
+                                width: "200",
+                                text: "continue_with",
+                                shape: "pill"
+                            }
+                        );
                     }
-                );
+                    setGoogleReady(true);
+                    if (intervalId) clearInterval(intervalId);
+                } catch (err) {
+                    console.error("Google Init Error:", err);
+                }
             }
         };
 
-        // Efficient retry for Google script loading
-        const checkInterval = setInterval(() => {
-            if (window.google) {
-                initGoogle();
-                clearInterval(checkInterval);
-            }
-        }, 50);
+        // Run once if already loaded, otherwise poll
+        if (window.google?.accounts?.id) {
+            initGoogle();
+        } else {
+            intervalId = setInterval(initGoogle, 100);
+        }
 
-        return () => clearInterval(checkInterval);
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
     }, []);
 
     const handleGoogleResponse = (response) => {
@@ -110,7 +128,7 @@ const Login = () => {
                 <div className="gradient-sphere secondary"></div>
             </div>
 
-            <div className="login-container glass-panel animate-zoom-in">
+            <div className="login-container glass-panel animate-fade-in">
                 <div className="login-header">
                     <div className="login-logo">
                         <Crown size={40} className="text-primary" />

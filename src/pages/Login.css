@@ -7,7 +7,17 @@
     overflow: hidden;
     padding: 20px;
     background: #0f172a;
-    animation: fadeIn 0.8s ease-out forwards;
+    animation: simpleFade 0.5s ease-out forwards;
+}
+
+@keyframes simpleFade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .login-visual-bg {
@@ -355,6 +365,9 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    min-height: 44px;
+    /* Standard button height */
+    min-width: 200px;
 }
 
 .github-fix {
