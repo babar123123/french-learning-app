@@ -137,9 +137,7 @@ const Login = () => {
                     <div className="cta-wrapper">
                         <p className="cta-sub">Begin your linguistic adventure</p>
                         <div className="social-login-vertical">
-                            <div className="google-custom-frame">
-                                <div ref={googleButtonRef} className="official-google-container"></div>
-                            </div>
+                            <div ref={googleButtonRef} className="official-google-container"></div>
                             {!googleReady && <div className="loading-spinner-premium">Initializing Secure Link...</div>}
                         </div>
                     </div>

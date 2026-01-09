@@ -336,22 +336,6 @@
     filter: drop-shadow(0 0 12px rgba(244, 114, 182, 1));
 }
 
-/* Google Custom Frame */
-.google-custom-frame {
-    position: relative;
-    width: 100%;
-    max-width: 280px;
-    margin: 0 auto;
-    padding: 3px;
-    border-radius: 100px;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(244, 114, 182, 0.2));
-    transition: all 0.3s;
-}
-
-.google-custom-frame:hover {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(244, 114, 182, 0.3));
-}
-
 /* Auth Zone */
 .auth-zone {
     background: rgba(255, 255, 255, 0.02);
@@ -376,11 +360,10 @@
 
 .official-google-container {
     width: 100%;
+    max-width: 280px;
     display: flex;
     justify-content: center;
-    background: rgba(15, 23, 42, 0.8);
-    border-radius: 100px;
-    overflow: hidden;
+    transition: all 0.3s;
 }
 
 .official-google-container:hover {
