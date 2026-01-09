@@ -30,6 +30,9 @@ const Welcome = () => {
                         </div>
                     </div>
                     <h2 className="display-name">{name || 'Explorer'}!</h2>
+                    <p className="welcome-tagline">
+                        The ultimate journey to mastering a new language. Learn through games, dialogues, and AI practice.
+                    </p>
                 </div>
             )
         },
