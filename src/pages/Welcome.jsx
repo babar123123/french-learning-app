@@ -12,7 +12,7 @@ const Welcome = () => {
         const savedUser = JSON.parse(localStorage.getItem('user'));
         setUser(savedUser);
 
-        // Animation trigger
+        // Animation entry
         const timer = setTimeout(() => setShowContent(true), 100);
         return () => clearTimeout(timer);
     }, []);
@@ -22,43 +22,42 @@ const Welcome = () => {
     };
 
     return (
-        <div className="welcome-splash">
-            {/* Premium Animated Background */}
-            <div className="login-visual-bg">
-                <div className="gradient-sphere"></div>
-                <div className="gradient-sphere secondary"></div>
-            </div>
+        <div className="onboarding-overlay welcome-screen">
+            <div className={`onboarding-modal glass-panel ${showContent ? 'animate-fade-in' : ''}`}>
+                {/* Skip button from Image 1 */}
+                <button className="skip-btn" onClick={handleContinue}>
+                    Skip
+                </button>
 
-            <div className={`welcome-card-premium glass-panel ${showContent ? 'animate-zoom-in' : ''}`}>
-                <div className="welcome-header">
-                    <h1 className="text-gradient">Bienvenue</h1>
+                <div className="step-content">
+                    {/* Personalized Info from Image 2 */}
+                    <h1 className="bienvenue-text text-gradient">Bienvenue</h1>
 
-                    <div className="bot-avatar-container">
-                        <div className="bot-avatar animate-float">
-                            <Bot size={60} color="white" />
-                            <div className="sparkle-effect">
-                                <Sparkles size={24} className="sparkle-1" />
-                                <Sparkles size={24} className="sparkle-2" />
+                    <div className="bot-avatar-wrapper">
+                        <div className="bot-circle animate-float">
+                            <Bot size={55} color="white" />
+                            <div className="sparkle-overlay">
+                                <Sparkles size={24} className="sparkle-top-right" />
+                                <Sparkles size={24} className="sparkle-bottom-left" />
                             </div>
                         </div>
                     </div>
 
-                    <h2 className="user-name-display">{user?.name || 'Explorer'}!</h2>
+                    <h2 className="display-name">{user?.name || 'Explorer'}!</h2>
                 </div>
 
-                <div className="welcome-body">
-                    <p className="subtitle">Lumière is excited to guide you on your French quest. Ready to turn your curiosity into conversation?</p>
-
-                    <div className="welcome-quote">
-                        <p>"Your journey to fluency starts here."</p>
+                <div className="onboarding-footer">
+                    {/* Progress dots from Image 1 */}
+                    <div className="dots">
+                        <div className="dot active"></div>
+                        <div className="dot"></div>
+                        <div className="dot"></div>
                     </div>
-                </div>
 
-                <div className="welcome-footer-actions">
-                    <button className="btn btn-primary next-btn premium-next" onClick={handleContinue}>
-                        Enter Quest <ArrowRight size={20} />
+                    {/* Next button from Image 1 */}
+                    <button className="btn btn-primary welcome-next-btn" onClick={handleContinue}>
+                        Next <ArrowRight size={18} />
                     </button>
-                    <p className="tap-hint">Tap to start learning</p>
                 </div>
             </div>
         </div>
