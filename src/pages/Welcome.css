@@ -1,17 +1,49 @@
-.welcome-screen {
+.onboarding-overlay.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 1) 100%);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 10000;
+    padding: 20px;
 }
 
 .welcome-screen .onboarding-modal {
-    background: rgba(22, 30, 48, 0.85) !important;
+    background: rgba(30, 41, 59, 0.7) !important;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
-    padding: 40px 0 35px !important;
-    /* Remove horizontal padding for slider */
+    backdrop-filter: blur(25px);
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.7);
+    padding: 60px 0 40px !important;
+    position: relative;
+    border-radius: 32px;
     overflow: hidden;
-    width: 92%;
+    width: 100%;
     max-width: 420px;
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome-screen .skip-btn {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95rem;
+    z-index: 10;
+    transition: color 0.3s;
+}
+
+.welcome-screen .skip-btn:hover {
+    color: white;
 }
 
 /* Slider Engine */
