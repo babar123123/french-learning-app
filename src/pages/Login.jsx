@@ -36,13 +36,13 @@ const Login = () => {
             }
         };
 
-        // Retry if script loading is slow
+        // Efficient retry for Google script loading
         const checkInterval = setInterval(() => {
             if (window.google) {
                 initGoogle();
                 clearInterval(checkInterval);
             }
-        }, 500);
+        }, 50);
 
         return () => clearInterval(checkInterval);
     }, []);
