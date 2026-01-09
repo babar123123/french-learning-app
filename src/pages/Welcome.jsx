@@ -1,38 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Sparkles, ArrowRight } from 'lucide-react';
+import { Bot, Sparkles, Brain, Trophy, ArrowRight, X } from 'lucide-react';
 import './Welcome.css';
 
 const Welcome = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    const [showContent, setShowContent] = useState(false);
+    const [currentStep, setCurrentStep] = useState(0);
 
     useEffect(() => {
         const savedUser = JSON.parse(localStorage.getItem('user'));
         setUser(savedUser);
-
-        // Animation entry
-        const timer = setTimeout(() => setShowContent(true), 100);
-        return () => clearTimeout(timer);
     }, []);
 
-    const handleContinue = () => {
-        navigate('/');
-    };
-
-    return (
-        <div className="onboarding-overlay welcome-screen">
-            <div className={`onboarding-modal glass-panel ${showContent ? 'animate-fade-in' : ''}`}>
-                {/* Skip button from Image 1 */}
-                <button className="skip-btn" onClick={handleContinue}>
-                    Skip
-                </button>
-
+    const steps = [
+        {
+            type: 'personalized',
+            title: "Bienvenue",
+            content: (name) => (
                 <div className="step-content">
-                    {/* Personalized Info from Image 2 */}
                     <h1 className="bienvenue-text text-gradient">Bienvenue</h1>
-
                     <div className="bot-avatar-wrapper">
                         <div className="bot-circle animate-float">
                             <Bot size={55} color="white" />
@@ -42,21 +29,68 @@ const Welcome = () => {
                             </div>
                         </div>
                     </div>
-
-                    <h2 className="display-name">{user?.name || 'Explorer'}!</h2>
+                    <h2 className="display-name">{name || 'Explorer'}!</h2>
                 </div>
+            )
+        },
+        {
+            type: 'info',
+            title: "Real AI Conversations",
+            desc: "Our AI Tutor listens and corrects you in real-time. It's like having a native teacher in your pocket.",
+            icon: <Brain size={48} className="text-accent" />,
+            color: "var(--accent)"
+        },
+        {
+            type: 'info',
+            title: "Track Your Progress",
+            desc: "Earn XP, unlock 35+ levels, and collect rare badges as you move from Novice to Master.",
+            icon: <Trophy size={48} className="text-success" />,
+            color: "var(--success)"
+        }
+    ];
+
+    const handleNext = () => {
+        if (currentStep < steps.length - 1) {
+            setCurrentStep(s => s + 1);
+        } else {
+            navigate('/');
+        }
+    };
+
+    const handleSkip = () => {
+        navigate('/');
+    };
+
+    const step = steps[currentStep];
+
+    return (
+        <div className="onboarding-overlay welcome-screen">
+            <div className="onboarding-modal glass-panel animate-fade-in" key={currentStep}>
+                <button className="skip-btn" onClick={handleSkip}>
+                    Skip
+                </button>
+
+                {step.type === 'personalized' ? (
+                    step.content(user?.name)
+                ) : (
+                    <div className="step-content">
+                        <div className="icon-box" style={{ background: `${step.color}22` }}>
+                            {step.icon}
+                        </div>
+                        <h2>{step.title}</h2>
+                        <p>{step.desc}</p>
+                    </div>
+                )}
 
                 <div className="onboarding-footer">
-                    {/* Progress dots from Image 1 */}
                     <div className="dots">
-                        <div className="dot active"></div>
-                        <div className="dot"></div>
-                        <div className="dot"></div>
+                        {steps.map((_, i) => (
+                            <div key={i} className={`dot ${i === currentStep ? 'active' : ''}`} />
+                        ))}
                     </div>
 
-                    {/* Next button from Image 1 */}
-                    <button className="btn btn-primary welcome-next-btn" onClick={handleContinue}>
-                        Next <ArrowRight size={18} />
+                    <button className="btn btn-primary welcome-next-btn" onClick={handleNext}>
+                        {currentStep === steps.length - 1 ? "Start Learning" : "Next"} <ArrowRight size={18} />
                     </button>
                 </div>
             </div>
