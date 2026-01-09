@@ -344,39 +344,12 @@
     margin: 0 auto;
     padding: 3px;
     border-radius: 100px;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(244, 114, 182, 0.3));
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(244, 114, 182, 0.2));
     transition: all 0.3s;
 }
 
 .google-custom-frame:hover {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(244, 114, 182, 0.5));
-    box-shadow: 0 0 20px rgba(244, 114, 182, 0.3);
-}
-
-.frame-glow {
-    position: absolute;
-    inset: -2px;
-    border-radius: 100px;
-    background: linear-gradient(90deg, #6366f1, #ec4899, #818cf8, #6366f1);
-    background-size: 300%;
-    filter: blur(8px);
-    opacity: 0;
-    animation: frameFlow 4s infinite linear;
-    z-index: -1;
-}
-
-.google-custom-frame:hover .frame-glow {
-    opacity: 0.4;
-}
-
-@keyframes frameFlow {
-    from {
-        background-position: 0% center;
-    }
-
-    to {
-        background-position: 300% center;
-    }
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(244, 114, 182, 0.3));
 }
 
 /* Auth Zone */
