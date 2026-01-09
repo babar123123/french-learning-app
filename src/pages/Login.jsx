@@ -15,13 +15,14 @@ const Login = () => {
     const GOOGLE_CLIENT_ID = "752757921858-gm78m69iikgvr82455gc6aprcqa8a199.apps.googleusercontent.com";
 
     const [googleReady, setGoogleReady] = useState(false);
+    const hasRenderedGoogle = useRef(false);
 
     useEffect(() => {
         let intervalId = null;
 
         const initGoogle = () => {
-            if (window.google?.accounts?.id) {
-                // Clear immediately to prevent multiple renders
+            if (window.google?.accounts?.id && !hasRenderedGoogle.current) {
+                // Kill interval immediately
                 if (intervalId) {
                     clearInterval(intervalId);
                     intervalId = null;
@@ -30,34 +31,34 @@ const Login = () => {
                 try {
                     window.google.accounts.id.initialize({
                         client_id: GOOGLE_CLIENT_ID,
-                        callback: handleGoogleResponse
+                        callback: handleGoogleResponse,
+                        auto_select: false // Prevent automatic account picking on refresh
                     });
 
-                    if (googleButtonRef.current) {
+                    if (googleButtonRef.current && !hasRenderedGoogle.current) {
+                        hasRenderedGoogle.current = true;
                         window.google.accounts.id.renderButton(
                             googleButtonRef.current,
                             {
                                 theme: "filled_blue",
                                 size: "large",
-                                width: "200",
+                                width: "large", // Use responsive width
                                 text: "continue_with",
                                 shape: "pill"
                             }
                         );
                     }
                     setGoogleReady(true);
-                    if (intervalId) clearInterval(intervalId);
                 } catch (err) {
                     console.error("Google Init Error:", err);
                 }
             }
         };
 
-        // Run once if already loaded, otherwise poll
         if (window.google?.accounts?.id) {
             initGoogle();
         } else {
-            intervalId = setInterval(initGoogle, 100);
+            intervalId = setInterval(initGoogle, 200);
         }
 
         return () => {
@@ -158,6 +159,7 @@ const Login = () => {
                         <input
                             type="email"
                             placeholder="Email Address"
+                            autoComplete="off"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         />
@@ -168,6 +170,7 @@ const Login = () => {
                         <input
                             type="password"
                             placeholder="Password"
+                            autoComplete="off"
                             value={formData.password}
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         />
