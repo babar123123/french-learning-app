@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Crown, Mail, Lock, User, ArrowRight, MessageSquare, Languages, Trophy, Sparkles } from 'lucide-react';
+import { Crown, Lock, ArrowRight } from 'lucide-react';
 import { useSound } from '../context/SoundContext';
 import './Login.css';
 
@@ -92,65 +92,61 @@ const Login = () => {
     };
 
     return (
-        <div className="login-page ultra-premium-mockup">
-            {/* Cinematic Background Layer with Ribbons and Bokeh */}
-            <div className="ribbon-system">
-                <div className="ribbon r1"></div>
-                <div className="ribbon r2"></div>
-                <div className="ribbon r3"></div>
-                <div className="bokeh-layer">
-                    {[...Array(12)].map((_, i) => (
-                        <div key={i} className={`bokeh b${i + 1}`}></div>
-                    ))}
-                </div>
+        <div className="login-page">
+            {/* Cinematic Background Layer */}
+            <div className="mesh-gradient-container">
+                <div className="mesh-blob b1"></div>
+                <div className="mesh-blob b2"></div>
+                <div className="mesh-blob b3"></div>
             </div>
 
-            <div className="mockup-card glass-panel animate-zoom-in">
-                {/* Advanced Multi-Color Glowing Border */}
-                <div className="neon-border-glow"></div>
+            <div className="magic-particles">
+                {[...Array(6)].map((_, i) => (
+                    <div key={i} className={`magic-particle p${i + 1}`}></div>
+                ))}
+            </div>
 
-                <div className="card-inner-content">
-                    <div className="login-header-v3">
-                        <div className="logo-gold-wrapper">
-                            <Sparkles size={42} className="logo-icon-gold" />
+            <div className="login-container magic-card animate-fade-in">
+                {/* Shiny Sweep Overlay */}
+                <div className="card-shine"></div>
+
+                <div className="login-header">
+                    <div className="logo-section">
+                        <div className="login-logo-ring">
+                            <Crown size={34} className="crown-inner" />
                         </div>
-                        <h1 className="logo-text-gold">Lumière</h1>
+                        <h1 className="brand-name">Lumière</h1>
+                        <div className="brand-tagline">L'intelligence Artificielle au service de votre français</div>
                     </div>
+                </div>
 
-                    <div className="auth-zone-v3">
-                        <div className="google-btn-container-gold">
-                            <div className="google-btn-glow"></div>
+                <div className="feature-grid">
+                    <div className="feat-chip">
+                        <div className="feat-dot"></div>
+                        <span>AI-Powered Immersion</span>
+                    </div>
+                    <div className="feat-chip">
+                        <div className="feat-dot"></div>
+                        <span>Personalized Journey</span>
+                    </div>
+                </div>
+
+                {error && <div className="error-msg animate-shake">{error}</div>}
+
+                <div className="auth-zone">
+                    <div className="cta-wrapper">
+                        <p className="cta-sub">Begin your linguistic adventure</p>
+                        <div className="social-login-vertical">
                             <div ref={googleButtonRef} className="official-google-container"></div>
-                        </div>
-                        {!googleReady && <div className="loading-status-gold">Connecting to the future...</div>}
-                    </div>
-
-                    <div className="feature-showcase-v3">
-                        <div className="feat-v3-item">
-                            <div className="feat-v3-icon purple-gradient-icon">
-                                <MessageSquare size={20} />
-                            </div>
-                            <span className="feat-v3-label">AI Tutor</span>
-                        </div>
-                        <div className="feat-v3-item">
-                            <div className="feat-v3-icon pink-gradient-icon">
-                                <ArrowRight size={20} />
-                            </div>
-                            <span className="feat-v3-label">Adaptive Learning</span>
-                        </div>
-                        <div className="feat-v3-item">
-                            <div className="feat-v3-icon indigo-gradient-icon">
-                                <Trophy size={20} />
-                            </div>
-                            <span className="feat-v3-label">Cultural Insights</span>
+                            {!googleReady && <div className="loading-spinner-premium">Initializing Secure Link...</div>}
                         </div>
                     </div>
                 </div>
 
-                <div className="card-footer-v3">
-                    <div className="secure-badge-v3">
+                <div className="login-footer">
+                    <div className="security-seal">
                         <Lock size={12} />
-                        <span>Encrypted Gateway</span>
+                        <span>Encrypted & Verified Access</span>
                     </div>
                 </div>
             </div>
