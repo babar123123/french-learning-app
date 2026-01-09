@@ -93,54 +93,60 @@ const Login = () => {
 
     return (
         <div className="login-page">
-            <div className="login-visual-bg">
-                <div className="gradient-sphere"></div>
-                <div className="gradient-sphere secondary"></div>
-                <div className="floating-elements">
-                    <div className="float-item p1">FR</div>
-                    <div className="float-item p2">Bonjour</div>
-                    <div className="float-item p3">AI</div>
-                </div>
+            {/* Cinematic Background Layer */}
+            <div className="mesh-gradient-container">
+                <div className="mesh-blob b1"></div>
+                <div className="mesh-blob b2"></div>
+                <div className="mesh-blob b3"></div>
             </div>
 
-            <div className="login-container glass-panel animate-fade-in">
+            <div className="magic-particles">
+                {[...Array(6)].map((_, i) => (
+                    <div key={i} className={`magic-particle p${i + 1}`}></div>
+                ))}
+            </div>
+
+            <div className="login-container magic-card animate-fade-in">
+                {/* Shiny Sweep Overlay */}
+                <div className="card-shine"></div>
+
                 <div className="login-header">
-                    <div className="login-logo-ring">
-                        <Crown size={32} className="text-primary" />
+                    <div className="logo-section">
+                        <div className="login-logo-ring">
+                            <Crown size={34} className="crown-inner" />
+                        </div>
+                        <h1 className="brand-name">Lumière</h1>
+                        <div className="brand-tagline">L'intelligence Artificielle au service de votre français</div>
                     </div>
-                    <h1>Lumière</h1>
-                    <p className="subtitle">Master French with AI Intelligence</p>
                 </div>
 
-                <div className="feature-preview">
-                    <div className="feature-item">
-                        <div className="feat-icon"><ArrowRight size={14} /></div>
-                        <span>Interactive Conversations</span>
+                <div className="feature-grid">
+                    <div className="feat-chip">
+                        <div className="feat-dot"></div>
+                        <span>AI-Powered Immersion</span>
                     </div>
-                    <div className="feature-item">
-                        <div className="feat-icon"><ArrowRight size={14} /></div>
-                        <span>Personalized Learning Path</span>
-                    </div>
-                    <div className="feature-item">
-                        <div className="feat-icon"><ArrowRight size={14} /></div>
-                        <span>Real-time Corrections</span>
+                    <div className="feat-chip">
+                        <div className="feat-dot"></div>
+                        <span>Personalized Journey</span>
                     </div>
                 </div>
 
                 {error && <div className="error-msg animate-shake">{error}</div>}
 
-                <div className="cta-section">
-                    <p className="cta-label">Ready to start your quest?</p>
-                    <div className="social-login-vertical">
-                        <div ref={googleButtonRef} className="official-google-container"></div>
-                        {!googleReady && <div className="loading-spinner-simple">Connecting to secure gateway...</div>}
+                <div className="auth-zone">
+                    <div className="cta-wrapper">
+                        <p className="cta-sub">Begin your linguistic adventure</p>
+                        <div className="social-login-vertical">
+                            <div ref={googleButtonRef} className="official-google-container"></div>
+                            {!googleReady && <div className="loading-spinner-premium">Initializing Secure Link...</div>}
+                        </div>
                     </div>
                 </div>
 
                 <div className="login-footer">
-                    <div className="trust-badge">
+                    <div className="security-seal">
                         <Lock size={12} />
-                        <span>Verified by Google Identity</span>
+                        <span>Encrypted & Verified Access</span>
                     </div>
                 </div>
             </div>
